@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../styles.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 <form class="form-horizontal" action="http://127.0.0.1/registration" method="post">
@@ -21,6 +21,15 @@
             <label class="col-md-4 control-label" for="email">Email</label>
             <div class="col-md-4">
                 <input id="email" name="email" type="text" placeholder="email" class="form-control input-md" required="">
+
+            </div>
+        </div>
+
+        <!-- Text input-->
+        <div class="form-group">
+            <label class="col-md-4 control-label" for="email">Number</label>
+            <div class="col-md-4">
+                <input name="phone" type="number" placeholder="88003330033" class="form-control input-md" required="">
 
             </div>
         </div>
@@ -45,8 +54,9 @@
     </fieldset>
 </form>
 
-<?php if (!empty($errors)): foreach ($errors as $value) echo $value;?><?php endif;?>
-
+<div>
+    {{error}}
+</div>
 
 </body>
 </html>

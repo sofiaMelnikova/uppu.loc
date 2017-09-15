@@ -19,7 +19,7 @@ class DbQuery
     /**
      * @return null|\PDO
      */
-    private function getConnection() {
+    public function getConnection() {
         if (empty($dbConnections)) {
             return $this->dbConnection = new \PDO($this->dsn, $this->user, $this->password);
         }
@@ -45,12 +45,16 @@ class DbQuery
     /**
      * @param string $query
      * @param array $forExecute
-     * @return bool
+     * @return bool|string
      */
     public function changeData (string $query, array $forExecute = []) {
         $connection = $this->getConnection();
         $request = $connection->prepare($query);
-        return $request->execute($forExecute);
+        $result = $request->execute($forExecute);
+        if (!$result) {
+            return false;
+        }
+        return $connection->lastInsertId();
     }
 
 }
