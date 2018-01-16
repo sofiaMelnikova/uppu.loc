@@ -1,0 +1,26 @@
+.btn, .btn-primary, .enterUser {
+    color: #9fe5f4;
+    background: #3197d1;
+    border-color: #3197d1;
+    margin-right: 15px;
+}
+
+.btn:hover, .btn-primary:hover, .enterUser:hover {
+    color: #ffffff;
+    background: #3197d1;
+    border-color: #3197d1;
+}
+
+.btn:focus, .btn-primary:focus, .enterUser:focus {
+    outline:none;
+}
+
+.btn:active, .btn-primary:active, .enterUser:active {
+    color: #ffffff;
+    background: #3197d1!important;
+    border-color: #3197d1!important;
+}
+
+.my-navbar {
+    background-color: #3197d1!important;
+}

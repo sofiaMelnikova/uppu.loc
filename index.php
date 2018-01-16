@@ -8,7 +8,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 //
 $app = new \Slim\App();
 $app->get('/', function ($request, $response) {
-	return $response->getBody()->write('Hello World');
+	$loader = new Twig_Loader_Filesystem(__DIR__ . '/App/Views');
+	$twig = new Twig_Environment($loader);
+	return $response->getBody()->write($twig->render('Login.html'));
 });
 
 $app->run();
