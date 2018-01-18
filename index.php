@@ -31,15 +31,17 @@ $app->get('/', function ($request, $response) use ($app) {
 });
 
 $app->post('/login', function () use ($app) {
-//	var_dump(12);
-//	die();
+//	var_dump($app->getContainer()->get('request')->getmethod);
+	var_dump($app->getContainer()->get('request')->getParsedBody()); // $_POST
+//	var_dump($app->getContainer()->get('request')->getQueryParams()); // $_GET
+	die();
 	$app->getContainer()->get('Login.Controller')->loginUserAction($app);
 });
 
 $app->post('/registration', function () use ($app) {
-	var_dump(13);
-	die();
-	$app->getContainer()->get('Registration.Controller')->registrationUserAction($app);
+	$app->getContainer()->get('Registration.Controller')->registrationUserAction($app->getContainer()->get('request'),
+		$app->getContainer()->get('response'),
+		$app->getContainer()->get('DataBase'));
 });
 
 $app->run();

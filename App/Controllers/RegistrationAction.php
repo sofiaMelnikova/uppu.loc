@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
-use Slim\App;
+use Engine\DataBase;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 class RegistrationAction {
 
-	public function registrationUserAction (App $app) {
-		echo "Registration user!";
+	public function registrationUserAction (Request $request, Response $response, DataBase $dataBase) {
+		$postParams = $request->getParsedBody();
 	}
 }
