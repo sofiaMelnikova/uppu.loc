@@ -35,6 +35,7 @@
 }
 
 .imputFieldEnterUser {
+    /*float: right!important;*/
     width: 75%;
     float: left;
     position: relative;
@@ -85,5 +86,56 @@
 .registration-login-btn:active {
     background: #20648b!important;
     border-color: #174c6b!important;
+}
+
+.registrationForm {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #1e3948;
+    font-weight: 300;
+    letter-spacing: 0;
+    display: block;
+    margin-top: 0em;
+    margin-left: 45px;
+}
+
+.container {
+    padding-top: 120px;
+    width: 1230px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.divForRegistrationForm {
+    background-color: #ffffff;
+    margin-left: 330px;
+    border: 1px solid;
+    border-color: #d3e0e9;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+}
+
+.displayBlock {
+    display: block;
+}
+
+.blue-background-body {
+    background-color: #f5f8fa;
+}
+
+.title-registration {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    font-size: 30px;
+}
+
+.forRegistrationForm{
+    margin: 0 20px 0 20px;
 }
 

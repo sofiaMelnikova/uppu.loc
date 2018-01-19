@@ -19,29 +19,36 @@ $after = function ($request, $response, $next) use ($app) {
 };
 
 $app->get('/', function ($request, $response) use ($app) {
-	$loader = new Twig_Loader_Filesystem(__DIR__ . '/App/Views');
-	$twig = new Twig_Environment($loader);
+//	$loader = new Twig_Loader_Filesystem(__DIR__ . '/App/Views');
+//	$twig = new Twig_Environment($loader);
+//	var_dump($app->getContainer()->get('twig'));
+//	die();
 //	var_dump($app->getContainer()->get('Login.Controller'));
 //	die();
 //	var_dump($app->getContainer()->get('DataBase')->getConnection());
 	// response
 //	var_dump($app->getContainer()->get('request'));
 //	die();
-	return $app->getContainer()->get('response')->getBody()->write($twig->render('Header.html'));
+	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Header.html'));
 });
 
 $app->post('/login', function () use ($app) {
 //	var_dump($app->getContainer()->get('request')->getmethod);
-	var_dump($app->getContainer()->get('request')->getParsedBody()); // $_POST
+//	var_dump($app->getContainer()->get('request')->getParsedBody()); // $_POST
 //	var_dump($app->getContainer()->get('request')->getQueryParams()); // $_GET
-	die();
+//	die();
 	$app->getContainer()->get('Login.Controller')->loginUserAction($app);
 });
 
 $app->post('/registration', function () use ($app) {
 	$app->getContainer()->get('Registration.Controller')->registrationUserAction($app->getContainer()->get('request'),
 		$app->getContainer()->get('response'),
-		$app->getContainer()->get('DataBase'));
+		$app->getContainer()->get('DataBase'),
+		$app->getContainer()->get('twig'));
+});
+
+$app->get('/registration', function () use ($app) {
+	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Registration.html'));
 });
 
 $app->run();

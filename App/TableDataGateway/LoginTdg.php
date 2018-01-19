@@ -3,6 +3,6 @@
 namespace App\TableDataGateway;
 
 
-class LoginTDG {
+class LoginTdg {
 
 }

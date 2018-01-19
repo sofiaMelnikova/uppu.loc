@@ -3,9 +3,11 @@
 <head>
     <title>uppu login</title>
     <meta charset="UTF-8">
+    {% block stylesheets %}
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     <link href="Assets/css/styles.css" rel="stylesheet">
+    {% endblock %}
 </head>
 <body>
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -43,7 +45,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" action="/registration" method="post" id="sendRegistrationForm">
+                            <form class="displayBlock form-inline" action="/registration" method="post" id="sendRegistrationForm">
                                 <div class="form-group fieldEnterUser">
                                     <div class="lableFieldEnterUser">
                                         <label for="inputName">*Имя:</label>
@@ -101,7 +103,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form class="form-inline" method="post" action="/login" id="sendLoginForm">
+                            <form class="displayBlock form-inline" method="post" action="/login" id="sendLoginForm">
                                 <div class="form-group fieldEnterUser">
                                     <div class="lableFieldEnterUser">
                                         <label for="inputEmailLogin">*E-mail:</label>
