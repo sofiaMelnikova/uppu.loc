@@ -17,8 +17,8 @@
 
     <div class="container" id="content">
         <div class="row">
-            <div class="divForRegistrationForm">
-                <form class="registrationForm form-inline simple_form form-horizontal" action="/registration" method="post" id="sendRegistrationForm">
+            <div class="divForRegistrationLoginForm">
+                <form class="registrationLoginForm form-inline simple_form form-horizontal" action="/registration" method="post" id="sendRegistrationForm">
                     <div class="panel panel-default col-md-4 col-md-offset-4">
                         <div class="panel-title title-registration">
                             <h2>Регистрация</h2>
@@ -29,35 +29,48 @@
                             <label for="inputName">*Имя:</label>
                         </div>
                         <div class="imputFieldEnterUser">
-                            <input name="userName" value="{{userName}}" type="text" id="inputName" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
+                            <input name="userName" value="{{values.userName}}" type="text" id="inputName" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
                         </div>
+                        <small class="renderError form-text text-muted">
+                            {{errors.userName}}
+                        </small>
                     </div>
                     <div class="form-group fieldEnterUser">
                         <div class="lableFieldEnterUser">
                             <label for="inputEmail">*E-mail:</label>
                         </div>
                         <div class="imputFieldEnterUser">
-                            <input name="email" value="{{email}}" type="text" id="inputEmail" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
+                            <input name="email" value="{{values.email}}" type="text" id="inputEmail" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
                         </div>
+                        <small class="renderError form-text text-muted">
+                            {{errors.email}}
+                        </small>
                     </div>
                     <div class="form-group fieldEnterUser">
                         <div class="lableFieldEnterUser">
                             <label for="inputPassword">*Пароль:</label>
                         </div>
                         <div class="imputFieldEnterUser">
-                            <input name="password" value="{{password}}" type="password" id="inputPassword" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
+                            <input name="password" value="{{values.password}}" type="password" id="inputPassword" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
                         </div>
+                        <small class="renderError form-text text-muted">
+                            {{errors.password}}
+                        </small>
                     </div>
                     <div class="form-group fieldEnterUser">
                         <div class="lableFieldEnterUser">
                             <label for="repeatPassword">*Повторите пароль:</label>
                         </div>
                         <div class="imputFieldEnterUser">
-                            <input name="passwordRepeater" value="{{passwordRepeater}}" type="password" id="repeatPassword" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
+                            <input name="passwordRepeater" value="{{values.passwordRepeater}}" type="password" id="repeatPassword" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
                         </div>
+                        <small class="renderError form-text text-muted">
+                            {{errors.passwordRepeater}}
+                        </small>
                     </div>
                 </form>
-                <div class="modal-footer forRegistrationForm">
+                <div class="modal-footer forRegistrationLoginForm">
+                    <a type="button" href="/login" class="btn btn-primary get-registration-login-btn">Войти</a>
                     <button type="submit" onclick="return $('#sendRegistrationForm').submit()" class="btn btn-primary registration-login-btn">Зарегестрироваться</button>
                 </div>
             </div>

@@ -20,6 +20,6 @@ return [
 		return new \App\Models\RegistrationModel();
 	},
 	'DataBase' => function () use ($dbConf) {
-		new \Engine\DataBase($dbConf['dbName'], $dbConf['userName'], $dbConf['password'], $dbConf['host'], $dbConf['port']);
+		return new \Engine\DataBase($dbConf['dbName'], $dbConf['userName'], $dbConf['password'], $dbConf['host'], $dbConf['port']);
 	}
 ];

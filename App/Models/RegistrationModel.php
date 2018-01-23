@@ -5,22 +5,31 @@ namespace App\Models;
 use App\TableDataGateway\RegistrationTdg;
 use Engine\DataBase;
 
-class RegistrationModel {
+class RegistrationModel extends AbstractModel {
 
 	/**
+	 * @param string $email
 	 * @param DataBase $dataBase
-	 * @return RegistrationTdg
+	 * @return bool
 	 */
-	private function getRegistrationTdg (DataBase $dataBase) {
-		return new RegistrationTdg($dataBase);
-	}
-
-
-	public function issetEmail (string $email, DataBase $dataBase) {
+	public function isSetActiveEmail (string $email, DataBase $dataBase): bool {
 		$registrationTdg = $this->getRegistrationTdg($dataBase);
 		$result = $registrationTdg->findEmail($email);
-		var_dump($result);
-		die();
+		return (bool) array_shift($result);
+	}
+
+	/**
+	 * @param string $userName
+	 * @param string $email
+	 * @param string $password
+	 * @param string $initCookie
+	 * @param DataBase $dataBase
+	 * @return int
+	 */
+	public function addNewUser (string $userName, string $email, string $password, string $initCookie, DataBase $dataBase): int {
+		$passwordHash = password_hash($password, PASSWORD_BCRYPT);
+		$registrationTdg = $this->getRegistrationTdg($dataBase);
+		return (int) $registrationTdg->addNewUser($userName, $email, $passwordHash, 'base', $initCookie);
 	}
 
 }

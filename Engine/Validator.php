@@ -35,7 +35,7 @@ class Validator {
 	 * @return $this
 	 */
 	private function email (string $email): Validator {
-		if (!$this->pregMatch('/.+@.+\..+/', $email)) {
+		if (!$this->pregMatch('/.+@.+\..+/', $email) && empty($this->errors['email'])) {
 			$this->errors['email'] = 'Incorrect e-mail.';
 		}
 
@@ -47,8 +47,8 @@ class Validator {
 	 * @return Validator
 	 */
 	private function password (string $password): Validator {
-		if (!$this->pregMatch('/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}', $password)) {
-			$this->errors['password'] = 'Incorrect password. Password must have consist of capital letter, lowercase letter and number. It`s must have length 8 jr more symbols.';
+		if (!$this->pregMatch('/(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}/', $password) && empty($this->errors['password'])) {
+			$this->errors['password'] = 'Incorrect password. Password must have consist of capital letter, lowercase letter and number. It`s must have length 8 or more symbols.';
 		}
 
 		return $this;
@@ -59,8 +59,8 @@ class Validator {
 	 * @return Validator
 	 */
 	private function name (string $name): Validator {
-		if ((strlen($name) < 3)) {
-			$this->errors['name'] = 'Name must have 3 or more symbols.';
+		if ((iconv_strlen($name) < 3) && empty($this->errors['userName'])) {
+			$this->errors['userName'] = 'Name must have 3 or more symbols.';
 		}
 
 		return $this;
@@ -72,7 +72,7 @@ class Validator {
 	 * @return Validator
 	 */
 	private function passwordRepeater (string $password, string $passwordRepeater): Validator {
-		if ($password != $passwordRepeater) {
+		if (($password != $passwordRepeater) && empty($this->errors['passwordRepeater'])) {
 			$this->errors['passwordRepeater'] = 'Repeated password and password are not equal.';
 		}
 
