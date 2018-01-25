@@ -18,12 +18,14 @@ class LoginTdg extends AbstractTableDataGateway {
 	/**
 	 * @param string $email
 	 * @param string $value
+	 * @param string $actualDateTime
 	 * @return int
 	 */
-	public function updateEnterCookie (string $email, string $value): int {
-		$query = "UPDATE `users` SET `enter_cookie` = :newValue WHERE `email` = :email AND `is_delete` = 0";
+	public function updateEnterCookie (string $email, string $value, string $actualDateTime): int {
+		$query = "UPDATE `users` SET `enter_cookie` = :newValue, `updated_at` = :actualDateTime WHERE `email` = :email AND `is_delete` = 0";
 		$params = [':email' => $email,
-					':newValue' => $value];
+					':newValue' => $value,
+					':actualDateTime' => $actualDateTime];
 		return $this->dataBase->update($query, $params);
 	}
 

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\TableDataGateway\RegistrationTdg;
 use Engine\DataBase;
 
 class RegistrationModel extends AbstractModel {
@@ -29,7 +28,8 @@ class RegistrationModel extends AbstractModel {
 	public function addNewUser (string $userName, string $email, string $password, string $initCookie, DataBase $dataBase): int {
 		$passwordHash = password_hash($password, PASSWORD_BCRYPT);
 		$registrationTdg = $this->getRegistrationTdg($dataBase);
-		return (int) $registrationTdg->addNewUser($userName, $email, $passwordHash, 'base', $initCookie);
+		$now = date('Y-m-d H:i:s');
+		return (int) $registrationTdg->addNewUser($userName, $email, $passwordHash, 'base', $initCookie, $now, $now);
 	}
 
 }

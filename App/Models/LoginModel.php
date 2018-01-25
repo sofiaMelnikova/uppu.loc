@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\TableDataGateway\LoginTdg;
 use Engine\DataBase;
 use Slim\Http\Cookies;
 
 class LoginModel extends AbstractModel {
 
 	/**
+	 * @param string $value
 	 * @return string[]
 	 */
 	public function setInitCookie (string $value) {
@@ -56,7 +56,7 @@ class LoginModel extends AbstractModel {
 	 */
 	public function updateEnterCookie (string $email, string $newCookieValue, DataBase $dataBase): int {
 		$loginTdg = $this->getLoginTdg($dataBase);
-		return $loginTdg->updateEnterCookie($email, $newCookieValue);
+		return $loginTdg->updateEnterCookie($email, $newCookieValue, date('Y-m-d H:i:s'));
 	}
 
 }

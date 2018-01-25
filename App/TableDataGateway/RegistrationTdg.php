@@ -2,7 +2,6 @@
 
 namespace App\TableDataGateway;
 
-use Engine\DataBase;
 
 class RegistrationTdg extends AbstractTableDataGateway {
 
@@ -22,16 +21,20 @@ class RegistrationTdg extends AbstractTableDataGateway {
 	 * @param string $passwordHash
 	 * @param string $userType
 	 * @param string $initCookie
+	 * @param string $createdAt
+	 * @param string $updatedAt
 	 * @return string
 	 */
-	public function addNewUser (string $userName, string $email, string $passwordHash, string $userType, string $initCookie): string {
-		$query = "INSERT INTO `uppu`.`users` (`name`, `email`, `password_hash`, `user_type`, `enter_cookie`) 
-					VALUES (:userName, :email, :passwordHash, :userType, :enterCookie)";
+	public function addNewUser (string $userName, string $email, string $passwordHash, string $userType, string $initCookie, string $createdAt, string $updatedAt): string {
+		$query = "INSERT INTO `uppu`.`users` (`name`, `email`, `password_hash`, `user_type`, `enter_cookie`, `created_at`, `updated_at`) 
+					VALUES (:userName, :email, :passwordHash, :userType, :enterCookie, :createdAt, :updatedAt)";
 		$params = [':userName' => $userName,
 					':email' => $email,
 					':passwordHash' => $passwordHash,
 					':userType' => $userType,
-					':enterCookie' => $initCookie];
+					':enterCookie' => $initCookie,
+					':createdAt' => $createdAt,
+					':updatedAt' => $updatedAt];
 		return $this->dataBase->insert($query, $params, true);
 	}
 
