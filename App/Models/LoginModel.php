@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Engine\DataBase;
 use Slim\Http\Cookies;
+use Slim\Http\Request;
+use Twig\Sandbox\SecurityNotAllowedTagError;
 
 class LoginModel extends AbstractModel {
 
@@ -57,6 +59,57 @@ class LoginModel extends AbstractModel {
 	public function updateEnterCookie (string $email, string $newCookieValue, DataBase $dataBase): int {
 		$loginTdg = $this->getLoginTdg($dataBase);
 		return $loginTdg->updateEnterCookie($email, $newCookieValue, date('Y-m-d H:i:s'));
+	}
+
+	/**
+	 * @param Request $request
+	 * @return string
+	 */
+	public function getLoginCookie (Request $request): string {
+		return $request->getCookieParam('login', '');
+	}
+
+	/**
+	 * @param string $loginCookie
+	 * @param DataBase $dataBase
+	 * @return int - 0, if user absent
+	 */
+	public function getUserIdByCookie (string $loginCookie, DataBase $dataBase): int {
+		$loginTdg = $this->getLoginTdg($dataBase);
+		$result = $loginTdg->findUserByLoginCookie($loginCookie);
+		return $result ? (int) array_shift($result) : 0;
+	}
+
+	/**
+	 * @param Request $request
+	 * @param DataBase $dataBase
+	 * @return bool
+	 */
+	public function isLoginUser (Request $request, DataBase $dataBase):bool {
+		$loginCookie = $this->getLoginCookie($request);
+
+		if (!$loginCookie) {
+			return false;
+		}
+
+		$userId = $this->getUserIdByCookie($loginCookie, $dataBase);
+
+		return $userId ? true : false;
+	}
+
+	/**
+	 * @param Request $request
+	 * @param DataBase $dataBase
+	 * @return int - 0, if user absent or user was logout
+	 */
+	public function getActiveUserId (Request $request, DataBase $dataBase): int {
+		$loginCookie = $this->getLoginCookie($request);
+
+		if (!$loginCookie) {
+			return 0;
+		}
+
+		return $this->getUserIdByCookie($loginCookie, $dataBase);
 	}
 
 }

@@ -29,4 +29,14 @@ class LoginTdg extends AbstractTableDataGateway {
 		return $this->dataBase->update($query, $params);
 	}
 
+	/**
+	 * @param string $loginCookie
+	 * @return array|bool
+	 */
+	public function findUserByLoginCookie (string $loginCookie) {
+		$query = "SELECT `users`.`id` FROM `users` WHERE `users`.`enter_cookie` = :loginCookie";
+		$params = [':loginCookie' => $loginCookie];
+		return $this->dataBase->select($query, $params, false);
+	}
+
 }

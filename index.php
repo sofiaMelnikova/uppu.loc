@@ -18,17 +18,7 @@ $after = function ($request, $response, $next) use ($app) {
 	return $response;
 };
 
-$app->get('/', function ($request, $response) use ($app) {
-//	$loader = new Twig_Loader_Filesystem(__DIR__ . '/App/Views');
-//	$twig = new Twig_Environment($loader);
-//	var_dump($app->getContainer()->get('twig'));
-//	die();
-//	var_dump($app->getContainer()->get('Login.Controller'));
-//	die();
-//	var_dump($app->getContainer()->get('DataBase')->getConnection());
-	// response
-//	var_dump($app->getContainer()->get('request'));
-//	die();
+$app->get('/', function () use ($app) {
 	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Header.html'));
 });
 
@@ -64,6 +54,12 @@ $app->get('/login', function () use ($app) {
 
 $app->get('/profile', function () use ($app) {
 	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Profile.html'));
+});
+
+$app->get('/test', function () use ($app) {
+	$res = (new \App\Models\LoginModel())->getActiveUserId($app->getContainer()->get('request'), $app->getContainer()->get('DataBase'));
+	var_dump($res);
+	die();
 });
 
 $app->run();
