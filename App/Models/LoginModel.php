@@ -5,7 +5,6 @@ namespace App\Models;
 use Engine\DataBase;
 use Slim\Http\Cookies;
 use Slim\Http\Request;
-use Twig\Sandbox\SecurityNotAllowedTagError;
 
 class LoginModel extends AbstractModel {
 

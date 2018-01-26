@@ -164,3 +164,53 @@
     color: red!important;
 }
 
+.main-body {
+    background: #C8C9AD url(/Assets/img/background-b57148db0eeef9ddaf2b05b8536fcd10.png) no-repeat;
+    background-size: 100% 100%;
+}
+
+.container {
+    padding-top: 30px;
+    width: 1230px;
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.container-fill-height {
+    height: 80vh;
+    display: table;
+    width: 100%;
+}
+
+.container-content-middle {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.m-x-auto {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.btn-upload {
+    white-space: normal;
+    font-size: 25px;
+    display: block;
+}
+
+.hint-upload {
+    background: rgba(0,0,0,0.2);
+    text-shadow: none;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display: table;
+    padding: 1px 8px 1px 8px;
+    min-height: 20px;
+    border: 0px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: white;
+    white-space: normal;
+}

@@ -62,4 +62,13 @@ $app->get('/test', function () use ($app) {
 	die();
 });
 
+$app->get('/main', function () use ($app) {
+	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Main.html'));
+});
+
+$app->post('/download', function () use ($app) {
+	var_dump($app->getContainer()->get('request')->getParsedBody());
+	die();
+});
+
 $app->run();
