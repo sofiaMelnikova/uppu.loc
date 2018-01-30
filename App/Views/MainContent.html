@@ -1,0 +1,32 @@
+{% include 'Header.html' %}
+
+<div class="main-body">
+    <div class="container">
+        <div class="container-fill-height">
+            <div class="container-content-middle">
+                <div class="row">
+                    <div class="m-x-auto">
+                        <img alt="Cloud-storage" class="img-responsive center-block cloud-img" onerror="this.onerror=null; this.src='cloud-storage.png'" src="/Assets/img/cloud-storage-27cfb32ad71ea9353f6fc5565b632817.svg">
+                    </div>
+                </div>
+                <div class="upload-form-wrap">
+                    <div id="upload-button-block">
+                        <center>
+                            <form class="hide" action="/download" enctype="multipart/form-data" id="sendFile" method="post">
+                                <input id="chooseFile" onchange="return $('#sendFile').submit()" name="downloadFile" type="file" value="Поделитесь - выберите файл">
+                            </form>
+                            <button class="btn btn-primary btn-upload registration-login-btn" onclick="return $('#chooseFile').click()" name="downloadFile">Поделитесь - выберите файл</button>
+                            <span class="hint hint-upload no-overflow nowrap">Размер файла не более 100 МБ
+                        </span>
+                        </center>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% include 'Footer.html' %}

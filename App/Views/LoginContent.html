@@ -1,0 +1,47 @@
+{% include 'Header.html' %}
+
+<div class="blue-background-body">
+    <div class="container" id="content">
+        <div class="row">
+            <div class="divForRegistrationLoginForm">
+                <form class="registrationLoginForm form-inline simple_form form-horizontal" action="/login" method="post" id="sendLoginForm">
+                    <div class="panel panel-default col-md-4 col-md-offset-4">
+                        <div class="panel-title title-registration">
+                            <h2>Авторизация</h2>
+                        </div>
+                    </div>
+                    <div class="form-group fieldEnterUser">
+                        <div class="lableFieldEnterUser">
+                            <label for="inputEmail">*E-mail:</label>
+                        </div>
+                        <div class="imputFieldEnterUser">
+                            <input name="email" value="{{values.email}}" type="text" id="inputEmail" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
+                        </div>
+                        <small class="renderError form-text text-muted">
+                            {{errors.email}}
+                        </small>
+                    </div>
+                    <div class="form-group fieldEnterUser">
+                        <div class="lableFieldEnterUser">
+                            <label for="inputPassword">*Пароль:</label>
+                        </div>
+                        <div class="imputFieldEnterUser">
+                            <input name="password" value="{{values.password}}" type="password" id="inputPassword" class="form-control mx-sm-3" aria-describedby="passwordHelpInline">
+                        </div>
+                        <small class="renderError form-text text-muted">
+                            {{errors.password}}
+                        </small>
+                    </div>
+                </form>
+                <div class="modal-footer forRegistrationLoginForm">
+                    <a type="button" href="/registration" class="btn btn-primary get-registration-login-btn">Зарегестрирваться</a>
+                    <button type="submit" onclick="return $('#sendLoginForm').submit()" class="btn btn-primary registration-login-btn">Войти</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+{% include 'Footer.html' %}

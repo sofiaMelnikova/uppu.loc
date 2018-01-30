@@ -36,7 +36,7 @@ class LoginAction {
 			$toHeadersCookie = $loginModel->setInitCookie($initCookieString);
 			return $response->withHeader('Set-Cookie', $toHeadersCookie)->withRedirect('/profile');
 		}
-
-		return $response->write($twig->render('Login.html', ['errors' => $errors, 'values' => $postParams]));
+		
+		return $response->write($twig->render('LoginContent.html', ['errors' => $errors, 'values' => $postParams]));
 	}
 }

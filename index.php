@@ -18,16 +18,11 @@ $after = function ($request, $response, $next) use ($app) {
 	return $response;
 };
 
-$app->get('/', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Header.html'));
-});
-
 //$app->post('/login', function () use ($app) {
 //	var_dump($app->getContainer()->get('request')->getmethod);
 //	var_dump($app->getContainer()->get('request')->getParsedBody()); // $_POST
 //	var_dump($app->getContainer()->get('request')->getQueryParams()); // $_GET
 //	die();
-//	$app->getContainer()->get('Login.Controller')->loginUserAction($app);
 //});
 
 $app->post('/login', function () use ($app) {
@@ -45,30 +40,30 @@ $app->post('/registration', function () use ($app) {
 });
 
 $app->get('/registration', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Registration.html'));
+	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('RegistrationContent.html'));
 });
 
 $app->get('/login', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Login.html'));
+	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('LoginContent.html'));
 });
 
 $app->get('/profile', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Profile.html'));
+	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('ProfileContent.html'));
 });
 
-$app->get('/test', function () use ($app) {
-	$res = (new \App\Models\LoginModel())->getActiveUserId($app->getContainer()->get('request'), $app->getContainer()->get('DataBase'));
-	var_dump($res);
-	die();
-});
-
-$app->get('/main', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('Main.html'));
+$app->get('/', function () use ($app) {
+	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('MainContent.html'));
 });
 
 $app->post('/download', function () use ($app) {
-	var_dump($app->getContainer()->get('request')->getParsedBody());
+	$uploadFile = $app->getContainer()->get('request')->getUploadedFiles();
+	var_dump($uploadFile['downloadFile']->getClientMediaType());
+//	Slim\Http\UploadedFile();
 	die();
+});
+
+$app->get('/test', function () use ($app) {
+	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('testContent.html'));
 });
 
 $app->run();

@@ -214,3 +214,7 @@
     color: white;
     white-space: normal;
 }
+
+.hide {
+    display: none;
+}

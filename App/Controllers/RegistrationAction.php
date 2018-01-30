@@ -39,14 +39,14 @@ class RegistrationAction {
 		$errors = $validator->registrationForm($postParams);
 
 		if (!empty($errors)) {
-			return $response->write($twig->render('Registration.html', ['errors' => $errors, 'values' => $postParams]));
+			return $response->write($twig->render('RegistrationContent.html', ['errors' => $errors, 'values' => $postParams]));
 		}
 
 		$registrationModel = $this->getRegistrationModel();
 		$existEmail = $registrationModel->isSetActiveEmail($postParams['email'], $dataBase);
 
 		if ($existEmail) {
-			return $response->write($twig->render('Registration.html', ['errors' => ['email' => 'User already exist with this e-mail'], 'values' => $postParams]));
+			return $response->write($twig->render('RegistrationContent.html', ['errors' => ['email' => 'User already exist with this e-mail'], 'values' => $postParams]));
 		}
 
 		$initCookieString = (new Helper())->getRandomString();
