@@ -13,20 +13,19 @@
                     <div id="upload-button-block">
                         <center>
                             <form class="hide" action="/download" enctype="multipart/form-data" id="sendFile" method="post">
-                                <input id="chooseFile" onchange="return $('#sendFile').submit()" name="downloadFile" type="file" value="Поделитесь - выберите файл">
+                                <input id="chooseFile" onchange="return $('#sendFile').submit()" name="uploadedFile" type="file" value="Поделитесь - выберите файл">
                             </form>
                             <button class="btn btn-primary btn-upload registration-login-btn" onclick="return $('#chooseFile').click()" name="downloadFile">Поделитесь - выберите файл</button>
-                            <span class="hint hint-upload no-overflow nowrap">Размер файла не более 100 МБ
-                        </span>
+                            <span class="hint hint-upload no-overflow nowrap">Размер файла не более 100 МБ</span>
+                            <small class="renderError form-text text-muted">
+                                {{errors.file}}
+                            </small>
                         </center>
                     </div>
-
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
 
 {% include 'Footer.html' %}

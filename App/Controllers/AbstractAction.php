@@ -2,14 +2,39 @@
 
 namespace App\Controllers;
 
-use Slim\App;
+use Engine\Helper;
+use Engine\Validator;
+use App\Models\RegistrationModel;
+use App\Models\LoginModel;
 
 abstract class AbstractAction {
 
-	protected $app;
+	/**
+	 * @return LoginModel
+	 */
+	protected function getLoginModel () {
+		return new LoginModel();
+	}
 
-	public function __construct(App $app) {
-		$this->app = $app;
+	/**
+	 * @return RegistrationModel
+	 */
+	protected function getRegistrationModel () {
+		return new RegistrationModel();
+	}
+
+	/**
+	 * @return Validator
+	 */
+	protected function getValidator () {
+		return new Validator();
+	}
+
+	/**
+	 * @return Helper
+	 */
+	protected function getHelper () {
+		return new Helper();
 	}
 
 }

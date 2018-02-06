@@ -2,21 +2,22 @@
 ini_set('display_errors', true);
 ini_set('display_startup_errors', true);
 ini_set("display_errors",1);
+ini_set('memory_limit', '2G'); // максимальный объем памяти, который разрешается использовать скрипту
+ini_set('max_execution_time', 20000); // максимальное время за которое должен выпоняться скрипт
+
+// значения: max_input_time, upload_max_filesize, post_max_size - нельзя помнять с помощью ini_set (изменены в php.ini, проверить все зачения: phpinfo())
+// что бы изменения в php.ini вступили в силу, необходимо перезапустить php-pfm: sudo service php7.0-fpm restart
+// ini_set('max_input_time', -1); // максимальное время, в течение которого могут принематься данные на сервер (-1 - будет использоваться )
+// ini_set('upload_max_filesize', '2G'); // максимальный размер файла, который допускается для загрузки на сервер
+// ini_set('post_max_size', '2G'); // максимальный размер, отправляемых даных
+
 error_reporting(E_ALL);
+
 
 require_once __DIR__ . '/vendor/autoload.php';
 
 $container = require_once __DIR__ . "/Configs/ConstructContainApp.php";
 $app = new \Slim\App($container);
-
-$after = function ($request, $response, $next) use ($app) {
-//	$response->getBody()->write($app['Login.Controller']->test());
-//	$app['Login.Controller']->test();
-	$response = $next($request, $response);
-
-
-	return $response;
-};
 
 //$app->post('/login', function () use ($app) {
 //	var_dump($app->getContainer()->get('request')->getmethod);
@@ -56,13 +57,21 @@ $app->get('/', function () use ($app) {
 });
 
 $app->post('/download', function () use ($app) {
-	$uploadFile = $app->getContainer()->get('request')->getUploadedFiles();
-	var_dump($uploadFile['downloadFile']->getClientMediaType());
-//	Slim\Http\UploadedFile();
-	die();
+	return (new \App\Controllers\FileAction())->newFileAction(
+		$app->getContainer()->get('request'),
+		$app->getContainer()->get('response'),
+		$app->getContainer()->get('DataBase'),
+		$app->getContainer()->get('twig')
+	);
+});
+
+$app->get('/new_file', function () use ($app) {
+	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('UploadedFileContent.html'));
 });
 
 $app->get('/test', function () use ($app) {
+//	var_dump(phpinfo());
+//	die();
 	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('testContent.html'));
 });
 

@@ -10,21 +10,7 @@ use Engine\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class RegistrationAction {
-
-	/**
-	 * @return Validator
-	 */
-	private function getValidator () {
-		return new Validator();
-	}
-
-	/**
-	 * @return RegistrationModel
-	 */
-	private function getRegistrationModel () {
-		return new RegistrationModel();
-	}
+class RegistrationAction extends AbstractAction {
 
 	/**
 	 * @param Request $request
@@ -49,11 +35,11 @@ class RegistrationAction {
 			return $response->write($twig->render('RegistrationContent.html', ['errors' => ['email' => 'User already exist with this e-mail'], 'values' => $postParams]));
 		}
 
-		$initCookieString = (new Helper())->getRandomString();
+		$initCookieString = ($this->getHelper())->getRandomString();
 
 		$registrationModel->addNewUser($postParams['userName'], $postParams['email'], $postParams['password'], $initCookieString, $dataBase);
 
-		$toHeadersCookie = (new LoginModel())->setInitCookie($initCookieString);
+		$toHeadersCookie = ($this->getLoginModel())->setInitCookie($initCookieString);
 
 		return $response->withHeader('Set-Cookie', $toHeadersCookie)->withRedirect('/profile');
 	}

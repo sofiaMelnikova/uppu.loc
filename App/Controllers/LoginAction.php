@@ -2,20 +2,11 @@
 
 namespace App\Controllers;
 
-use App\Models\LoginModel;
 use Engine\DataBase;
-use Engine\Helper;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-class LoginAction {
-
-	/**
-	 * @return LoginModel
-	 */
-	public function getLoginModel () {
-		return new LoginModel();
-	}
+class LoginAction extends AbstractAction {
 
 	/**
 	 * @param Request $request
@@ -30,7 +21,7 @@ class LoginAction {
 		$errors = $loginModel->checkPassword($postParams['email'], $postParams['password'], $dataBase);
 
 		if (empty($errors)) {
-			$initCookieString = (new Helper())->getRandomString();
+			$initCookieString = ($this->getHelper())->getRandomString();
 			$loginModel->updateEnterCookie($postParams['email'], $initCookieString, $dataBase);
 			$loginModel->setInitCookie($initCookieString);
 			$toHeadersCookie = $loginModel->setInitCookie($initCookieString);

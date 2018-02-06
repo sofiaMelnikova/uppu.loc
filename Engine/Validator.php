@@ -2,6 +2,9 @@
 
 namespace Engine;
 
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Constraints\File;
+use Slim\Http\UploadedFile;
 
 class Validator {
 
@@ -10,11 +13,44 @@ class Validator {
 	 */
 	private $errors;
 
+
+	/*******************************************************************************
+	 * File
+	 ******************************************************************************/
+
 	/**
-	 * @param $params
-	 * @return array
+	 * @param UploadedFile $uploadedFile
+	 * @return string ('' - if errors absent, else they are)
 	 */
-	public function registrationForm ($params): array {
+	public function file (UploadedFile $uploadedFile): string {
+		$validator = Validation::createValidator();
+		$mimeType = ['image/png', 'image/jpeg', 'image/pjpeg', 'image/gif']; // now only images
+//		$mimeType = $uploadedFile->getClientMediaType() ?? ''; // verification of the specified type
+		$errors = $validator->validate($uploadedFile->file , [
+			new File([
+				'maxSize' => '200M',
+				'binaryFormat' => false,
+				'mimeTypes' => $mimeType
+			])
+		]);
+
+		if ($errors->has(0)) {
+			return $errors->get(0)->getMessage();
+		}
+
+		return '';
+	}
+
+
+	/*******************************************************************************
+	 * Forms
+	 ******************************************************************************/
+
+	/**
+	 * @param array $params
+	 * @return array ([] - if errors absent, else they are)
+	 */
+	public function registrationForm (array $params): array {
 		$this->errors = [];
 
 		$this->isEmpty('userName', $params['userName'], 'Name')
