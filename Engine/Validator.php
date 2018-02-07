@@ -20,16 +20,18 @@ class Validator {
 
 	/**
 	 * @param UploadedFile $uploadedFile
-	 * @return string ('' - if errors absent, else they are)
+	 * @param string $maxSize
+	 * @param array $mimeType
+	 * @param bool $binaryFormat
+	 * @return string
 	 */
-	public function file (UploadedFile $uploadedFile): string {
+	public function file (UploadedFile $uploadedFile, string $maxSize = '100M', $mimeType = ['image/png', 'image/jpeg', 'image/pjpeg', 'image/gif'], bool $binaryFormat = false): string {
 		$validator = Validation::createValidator();
-		$mimeType = ['image/png', 'image/jpeg', 'image/pjpeg', 'image/gif']; // now only images
 //		$mimeType = $uploadedFile->getClientMediaType() ?? ''; // verification of the specified type
 		$errors = $validator->validate($uploadedFile->file , [
 			new File([
-				'maxSize' => '200M',
-				'binaryFormat' => false,
+				'maxSize' => $maxSize,
+				'binaryFormat' => $binaryFormat,
 				'mimeTypes' => $mimeType
 			])
 		]);

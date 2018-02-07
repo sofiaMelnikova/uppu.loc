@@ -65,7 +65,7 @@ $app->post('/download', function () use ($app) {
 	);
 });
 
-$app->get('/new_file', function () use ($app) {
+$app->get('/new-file', function () use ($app) {
 	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('UploadedFileContent.html'));
 });
 

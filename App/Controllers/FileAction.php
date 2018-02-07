@@ -15,16 +15,16 @@ class FileAction extends AbstractAction {
 			return $response->getBody()->write($twig->render('MainContent.html', ['errors' => ['file' => 'Something went wrong. File was not uploaded, please, try again.']]));
 		}
 
-		$errorString = $this->getValidator()->file($uploadedFile['uploadedFile']);
+		$errorString = $this->getValidator()->file($uploadedFile['uploadedFile'], '200M');
 
 		if ($errorString) {
 			return $response->getBody()->write($twig->render('MainContent.html', ['errors' => ['file' => $errorString]]));
 		}
 
+		$originalName = $uploadedFile['uploadedFile']->getClientFilename();
 
-		// TODO
 
-		return $response->withRedirect('/new_file');
+		return $response->withRedirect('/new-file');
 
 	}
 
