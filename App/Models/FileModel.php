@@ -83,4 +83,14 @@ class FileModel extends AbstractModel {
 		return $types;
 	}
 
+	/**
+	 * @param int $userId
+	 * @param string $addedFileCookie
+	 * @param DataBase $dataBase
+	 * @return int
+	 */
+	public function addUserIdToDownloadsInfoByCookie(int $userId, string $addedFileCookie, DataBase $dataBase): int {
+		return $this->getFileTdg($dataBase)->addUserIdToDownloadsInfoByCookie($userId, $addedFileCookie);
+	}
+
 }

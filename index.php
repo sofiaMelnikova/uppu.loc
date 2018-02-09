@@ -70,7 +70,7 @@ $app->get('/new-file', function () use ($app) {
 });
 
 $app->get('/test', function () use ($app) {
-	var_dump($app->getContainer()->get('request')->getCookieParam('added_files'));
+	var_dump($app->getContainer()->get('request')->getCookieParam('added_file'));
 	die();
 //	var_dump(phpinfo());
 //	die();

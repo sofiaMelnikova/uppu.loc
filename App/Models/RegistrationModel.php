@@ -23,7 +23,7 @@ class RegistrationModel extends AbstractModel {
 	 * @param string $password
 	 * @param string $initCookie
 	 * @param DataBase $dataBase
-	 * @return int
+	 * @return int (id new user)
 	 */
 	public function addNewUser (string $userName, string $email, string $password, string $initCookie, DataBase $dataBase): int {
 		$passwordHash = password_hash($password, PASSWORD_BCRYPT);

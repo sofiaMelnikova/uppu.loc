@@ -53,17 +53,29 @@ class FileTdg extends AbstractTableDataGateway {
 	 * @return array|bool
 	 */
 	public function getTypeIdForFile(string $typeName) {
-		$request = "SELECT `file_types`.`id` FROM `file_types` WHERE `file_types`.`type` = :type_name;";
+		$query = "SELECT `file_types`.`id` FROM `file_types` WHERE `file_types`.`type` = :type_name;";
 		$params = [':type_name' => $typeName];
-		return $this->dataBase->select($request, $params, false);
+		return $this->dataBase->select($query, $params, false);
 	}
 
 	/**
 	 * @return array|bool
 	 */
 	public function getAllFileTypes() {
-		$request = "SELECT `file_types`.`type` FROM `file_types`;";
-		return $this->dataBase->select($request);
+		$query = "SELECT `file_types`.`type` FROM `file_types`;";
+		return $this->dataBase->select($query);
+	}
+
+	/**
+	 * @param int $userId
+	 * @param string $addedFileCookie
+	 * @return int
+	 */
+	public function addUserIdToDownloadsInfoByCookie(int $userId, string $addedFileCookie) {
+		$query = "UPDATE `downloads_info` SET `user_id` = :user_id WHERE `added_file_cookie` = :added_file_cookie AND `user_id`IS NULL;";
+		$params = [':user_id' => $userId,
+					':added_file_cookie' => $addedFileCookie];
+		return $this->dataBase->update($query, $params);
 	}
 
 }

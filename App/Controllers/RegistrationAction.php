@@ -37,9 +37,15 @@ class RegistrationAction extends AbstractAction {
 
 		$initCookieString = ($this->getHelper())->getRandomString();
 
-		$registrationModel->addNewUser($postParams['userName'], $postParams['email'], $postParams['password'], $initCookieString, $dataBase);
+		$newUserId = $registrationModel->addNewUser($postParams['userName'], $postParams['email'], $postParams['password'], $initCookieString, $dataBase);
 
 		$toHeadersCookie = ($this->getLoginModel())->setInitCookie($initCookieString);
+
+		$addedFileCookie = $request->getCookieParam('added_file');
+
+		if (isset($addedFileCookie)) {
+			$this->getFileModel()->addUserIdToDownloadsInfoByCookie($newUserId, $addedFileCookie, $dataBase);
+		}
 
 		return $response->withHeader('Set-Cookie', $toHeadersCookie)->withRedirect('/profile');
 	}
