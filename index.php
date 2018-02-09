@@ -70,10 +70,7 @@ $app->get('/new-file', function () use ($app) {
 });
 
 $app->get('/test', function () use ($app) {
-	$fileTdg = new \App\TableDataGateway\FileTdg($app->getContainer()->get('DataBase'));
-	var_dump((int) $fileTdg->getTypeIdForFile('image')['id']);
-
-//	var_dump((new \App\Models\FileModel())->getAllFileTypes($app->getContainer()->get('DataBase')));
+	var_dump($app->getContainer()->get('request')->getCookieParam('added_files'));
 	die();
 //	var_dump(phpinfo());
 //	die();
