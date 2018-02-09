@@ -70,9 +70,14 @@ $app->get('/new-file', function () use ($app) {
 });
 
 $app->get('/test', function () use ($app) {
+	$fileTdg = new \App\TableDataGateway\FileTdg($app->getContainer()->get('DataBase'));
+	var_dump((int) $fileTdg->getTypeIdForFile('image')['id']);
+
+//	var_dump((new \App\Models\FileModel())->getAllFileTypes($app->getContainer()->get('DataBase')));
+	die();
 //	var_dump(phpinfo());
 //	die();
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('testContent.html'));
+//	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('testContent.html'));
 });
 
 $app->run();
