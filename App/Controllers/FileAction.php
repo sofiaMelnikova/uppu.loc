@@ -38,7 +38,7 @@ class FileAction extends AbstractAction {
 
 		$addedFileCookie = $request->getCookieParam('added_file');
 
-		if (empty($addedFileCookieLAST)) {
+		if (empty($addedFileCookie)) {
 			$addedFileCookie = $helper->getRandomString();
 			$toHeadersCookie = $fileModel->setAddedFileCookie($addedFileCookie);
 		}
