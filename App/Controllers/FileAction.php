@@ -15,7 +15,7 @@ class FileAction extends AbstractAction {
 	 * @param \Twig_Environment $twig
 	 * @return mixed
 	 */
-	public function newFileAction (Request $request, Response $response, DataBase $dataBase, \Twig_Environment $twig) {
+	public function uploadedFileAction (Request $request, Response $response, DataBase $dataBase, \Twig_Environment $twig) {
 		$uploadedFile = $request->getUploadedFiles();
 
 		if (empty($uploadedFile) || empty($uploadedFile['uploadedFile'])) {
@@ -43,19 +43,58 @@ class FileAction extends AbstractAction {
 			$toHeadersCookie = $fileModel->setAddedFileCookie($addedFileCookie);
 		}
 
-		$file = ['originalName' => $uploadedFile['uploadedFile']->getClientFilename(),
+		$file = [
+			'originalName' => $uploadedFile['uploadedFile']->getClientFilename(),
 			'originalExtension' => $uploadedFile['uploadedFile']->getClientMediaType(),
 			'pathTo' => 'Assets/UsersFiles/Image/' . $newFileName,
 			'size' => $uploadedFile['uploadedFile']->getSize(),
 			'type' => 'image',
 			'expireTime' => date('Y-m-d H:i:s', strtotime('+100 days')),
-			'updatedAt' => date('Y-m-d H:i:s')];
-		$downloadInfo = ['addedFileCookie' => $addedFileCookie,
-			'downloadDate' => date('Y-m-d H:i:s')];
+			'updatedAt' => date('Y-m-d H:i:s')
+		];
+
+		$downloadInfo = [
+			'addedFileCookie' => $addedFileCookie,
+			'downloadDate' => date('Y-m-d H:i:s')
+		];
 
 		$fileModel->addNewFileAnonym($dataBase, 'image', $file, $downloadInfo);
 
-		return isset($toHeadersCookie) ? $response->withHeader('Set-Cookie', $toHeadersCookie)->withRedirect('/new-file') : $response->withRedirect('/new-file');
+		$countDownloadedFile = $fileModel->getCountFilesByAddedFileCookie($addedFileCookie, $dataBase);
+
+		// TODO: add user params for login user and downloading for login user
+
+
+		$printedUserParams = [
+			'name' => '',
+			'countFiles' => $countDownloadedFile ?? '',
+		];
+//		$userName = '';
+//		$userCountFiles = $countDownloadedFile ?? '';
+
+		$printedFileParams = [
+			'link' => 'todo: generate download link', // TODO: create download link
+			'name' => $file['originalName'],
+			];
+
+//		$fileLink = 'todo: generate download link';
+//		$fileName = $file['originalName'];
+
+//		return isset($toHeadersCookie) ?
+//				$response
+//					->withHeader('Set-Cookie', $toHeadersCookie)
+//					->withRedirect("/uploaded-file/$userName/$userCountFiles/$fileLink/$fileName", 302) :
+//				$response
+//					->withRedirect("/uploaded-file/$userName/$userCountFiles/$fileLink/$fileName", 302);
+
+		return isset($toHeadersCookie) ?
+			$response
+				->withHeader('Set-Cookie', $toHeadersCookie)
+//				->withRedirect("/uploaded-file", 302)
+					->write($twig->render('UploadedFileContent.html', ['user' => $printedUserParams, 'file' => $printedFileParams])) :
+			$response
+//				->withRedirect("/uploaded-file", 302)
+					->write($twig->render('UploadedFileContent.html', ['user' => $printedUserParams, 'file' => $printedFileParams]));
 	}
 
 }

@@ -57,7 +57,7 @@ $app->get('/', function () use ($app) {
 });
 
 $app->post('/download', function () use ($app) {
-	return (new \App\Controllers\FileAction())->newFileAction(
+	return (new \App\Controllers\FileAction())->uploadedFileAction(
 		$app->getContainer()->get('request'),
 		$app->getContainer()->get('response'),
 		$app->getContainer()->get('DataBase'),
@@ -65,13 +65,20 @@ $app->post('/download', function () use ($app) {
 	);
 });
 
-$app->get('/new-file', function () use ($app) {
+$app->get('/uploaded-file', function () use ($app) {
 	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('UploadedFileContent.html'));
 });
 
+//$app->get('/uploaded-file/{userName}/{userCountFiles}/{fileLink}/{fileName}', function ($request, \Slim\Http\Response $response, $args) use ($app) {
+//	return $response->write($app->getContainer()->get('twig')
+//		->render('UploadedFileContent.html',
+//			[
+//				'user' => ['name' => $args['userName'], 'countFiles' => $args['userCountFiles']],
+//				'file' => ['link' => $args['fileLink'], 'name' => $args['fileName']]
+//			]));
+//})->prepare();
+
 $app->get('/test', function () use ($app) {
-	var_dump($app->getContainer()->get('request')->getCookieParam('added_file'));
-	die();
 //	var_dump(phpinfo());
 //	die();
 //	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('testContent.html'));

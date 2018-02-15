@@ -493,9 +493,9 @@ body {
 
 .btn-primary:active {
     background-image: none;
-    color: #fff;
-    background-color: #2579a9;
-    border-color: #1f648b;
+    color: #fff!important;
+    background-color: #2579a9!important;
+    border-color: #1f648b!important;
 }
 
 .btn-primary:focus {

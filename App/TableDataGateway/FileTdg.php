@@ -78,4 +78,14 @@ class FileTdg extends AbstractTableDataGateway {
 		return $this->dataBase->update($query, $params);
 	}
 
+	/**
+	 * @param string $addedFileCookie
+	 * @return array|bool
+	 */
+	public function getCountFilesByAddedFileCookie(string $addedFileCookie) {
+		$query = "SELECT COUNT(*) FROM `downloads_info` WHERE `downloads_info`.`added_file_cookie` = :added_file_cookie";
+		$params = [':added_file_cookie' => $addedFileCookie];
+		return $this->dataBase->select($query, $params, false);
+	}
+
 }
