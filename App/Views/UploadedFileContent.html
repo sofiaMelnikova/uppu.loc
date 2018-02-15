@@ -1,7 +1,7 @@
 {% include 'Header.html' %}
 
 <div class="mainUploadedFileContent">
-    <div class="page-file-show">
+    <div class="page-file-show row">
         <div class="col-sm-5 col-md-4 col-lg-3">
             <div class="panel panel-default panel-profile">
                 <div class="panel-heading panel-profile-hseading"></div>
@@ -12,9 +12,116 @@
                                 A
                             </div>
                         </a>
-
                     </div>
+                    <h5 class="panel-title panel-profile-nickname m-t-15 m-b-15">
+                        <a href="/" class="color-for-nickname" title="{% if user.name is defined %} {{user.name}} {% else %} Anonymously {% endif %}">
+                            {% if user.name is defined %}
+                                {{user.name}}
+                            {% else %}
+                                Anonymously
+                            {% endif %}
+                        </a>
+                    </h5>
+                    <ul class="panel-menu">
+                        <li>
+                            <a href="#" class="text-inherit">
+                                {% if user.countFiles is defined %}
+                                    My files
+                                    <h5 class="m-y-0"> {{user.countFiles}} </h5>
+                                {% endif %}
+                            </a>
+                        </li>
+                    </ul>
                 </div>
+            </div>
+        </div>
+        <div class="col-sm-7 col-md-8 col-lg-6">
+            <div>
+                <ul class="list-group m-b-1">
+                    <li class="list-group-item share-tab-content">
+                        <div class="file-share-title m-b-10">Поделитесь файлом:</div>
+                    </li>
+                    <li class="list-group-item">
+                        <div class="file-share-title m-b-10">
+                            {% if file.link is defined %}
+                                {{file.link}}
+                            {% else %}
+                                _Here must be link on file_
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <ul class="list-group">
+                    <li class="list-group-item file-edit-filename">
+                        <div class="file-info-title" title="{{file.name}}">
+                            {% if file.name is defined %}
+                                {{file.name}}
+                            {% else %}
+                                _File name_
+                            {% endif %}
+                        </div>
+                    </li>
+                    <form action="#">
+                        <li class="list-group-item">
+                            <div class="m-t-20 m-b-20">
+                                <div class="file-info-description text-muted m-b-10">
+                                    <i class="fa fa-edit"></i>
+                                    Описание файла
+                                </div>
+                                <hr class="m-b-10 m-t-10">
+                                <div class="form-group text optional fileset_title">
+                                    <div class="col-xs-4 col-sm-3 control-label">
+                                        <label class="text optional" for="fileset_title">Описание</label>
+                                    </div>
+                                    <div class="col-xs-8 col-sm-9">
+                                        <textarea class="text optional form-control m-b-0 title-input-field" cols="40" id="fileset_title" name="description" rows="3"></textarea>
+                                        <p class="help-block">
+                                            <span class="char-count text-muted">0 / 255 символов.</span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="file-info-view text-muted m-b-10 m-t-20">
+                                    <i class="fa fa-eye"></i>
+                                    Настройки изображения
+                                </div>
+                                <hr class="m-b-10 m-t-10">
+                                <div class="form-group select optional fileset_lifespan bs-workaround1">
+                                    <div class="col-xs-4 col-sm-3 control-label">
+                                        <label class="select optional" for="fileset_lifespan">Срок хранения</label>
+                                    </div>
+                                    <div class="col-xs-8 col-sm-9">
+                                        <select class="select optional form-control" id="fileset_lifespan" name="lifespan">
+                                            <option value="1">1 день</option>
+                                            <option value="5">5 дней</option>
+                                            <option value="30">30 дней</option>
+                                            <option value="90">90 дней</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <a href="#" class="btn btn-default file-edit-cancel">
+                                        <i class="fa fa-ban"></i>
+                                        Отмена
+                                    </a>
+                                </div>
+                                <div class="col-xs-3 col-xs-offset-6">
+                                    <div class="pull-right">
+                                        <button class="btn btn-primary file-edit-update" type="submit">
+                                            <i class="fa fa-check"></i>
+                                            Обновить
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </form>
+                </ul>
             </div>
         </div>
     </div>
