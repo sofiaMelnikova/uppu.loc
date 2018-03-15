@@ -2,6 +2,7 @@
 
 namespace Engine;
 
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Constraints\File;
 use Slim\Http\UploadedFile;
@@ -140,4 +141,13 @@ class Validator {
 		return preg_match($pattern, $subject) ? true : false;
 	}
 
+	/**
+	 * @param string $description
+	 * @return string if errors absent return '' else return error message
+	 */
+	public function validateDescriptionFile (string $description): string {
+		$validator = Validation::createValidator();
+		$result = $validator->validate($description, new Length(['max' => 255]));
+		return $result->has(0) ? $result->get(0)->getMessage() : '';
+	}
 }

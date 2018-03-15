@@ -13,6 +13,9 @@ return [
 	'Registration.Controller' => function () {
 		return new \App\Controllers\RegistrationAction();
 	},
+	'File.Controller' => function () {
+		return new \App\Controllers\FileAction();
+	},
 	'Login.Model' => function () {
 		return new \App\Models\LoginModel();
 	},

@@ -57,7 +57,7 @@ $app->get('/', function () use ($app) {
 });
 
 $app->post('/download', function () use ($app) {
-	return (new \App\Controllers\FileAction())->uploadedFileAction(
+	return $app->getContainer()->get('File.Controller')->uploadedAction(
 		$app->getContainer()->get('request'),
 		$app->getContainer()->get('response'),
 		$app->getContainer()->get('DataBase'),
@@ -69,6 +69,34 @@ $app->get('/uploaded-file', function () use ($app) {
 	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('UploadedFileContent.html'));
 });
 
+$app->get('/edit-file/{name}', function ($request, $response, $args) use ($app) {
+	return $app->getContainer()->get('File.Controller')
+		->getEditFileViewAction(
+			$args['name'],
+			$request,
+			$response,
+			$app->getContainer()->get('DataBase'),
+			$app->getContainer()->get('twig')
+		);
+});
+
+$app->get('/file/{name}', function () use ($app) {
+
+});
+
+$app->post('/get-file/{name}', function () use ($app) {
+
+});
+
+$app->post('/update-file', function () use ($app) {
+	return $app->getContainer()->get('File.Controller')->updateAction(
+		$app->getContainer()->get('request'),
+		$app->getContainer()->get('response'),
+		$app->getContainer()->get('DataBase'),
+		$app->getContainer()->get('twig')
+	);
+});
+
 //$app->get('/uploaded-file/{userName}/{userCountFiles}/{fileLink}/{fileName}', function ($request, \Slim\Http\Response $response, $args) use ($app) {
 //	return $response->write($app->getContainer()->get('twig')
 //		->render('UploadedFileContent.html',
@@ -78,7 +106,17 @@ $app->get('/uploaded-file', function () use ($app) {
 //			]));
 //})->prepare();
 
-$app->get('/test', function () use ($app) {
+$app->get('/test[/{test}]', function ($request, $response, $args) use ($app) {
+	$res = (new \App\TableDataGateway\FileTdg($app->getContainer()->get('DataBase')))->selectIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName('7KLj1lJ1521104828');
+	var_dump($res);
+	die();
+//	if (empty($args['test'])) { // использовать вместо этого что-то подобное before/after
+//		var_dump(123);
+//		die();
+//	}
+//	var_dump($args['test']);
+//	die();
+
 //	var_dump(phpinfo());
 //	die();
 //	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('testContent.html'));

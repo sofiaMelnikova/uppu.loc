@@ -21,10 +21,18 @@ class LoginAction extends AbstractAction {
 		$errors = $loginModel->checkPassword($postParams['email'], $postParams['password'], $dataBase);
 
 		if (empty($errors)) {
-			$initCookieString = ($this->getHelper())->getRandomString();
+			$initCookieString = $loginModel->generateLoginCookieString();
 			$loginModel->updateEnterCookie($postParams['email'], $initCookieString, $dataBase);
-			$loginModel->setInitCookie($initCookieString);
 			$toHeadersCookie = $loginModel->setInitCookie($initCookieString);
+
+			$userId = $loginModel->getUserIdByCookie($initCookieString, $dataBase);
+
+			$addedFileCookie = $request->getCookieParam('added_file');
+
+			if (isset($addedFileCookie)) {
+				$this->getFileModel()->addUserIdToDownloadsInfoByCookie($userId, $addedFileCookie, $dataBase);
+			}
+
 			return $response->withHeader('Set-Cookie', $toHeadersCookie)->withRedirect('/profile');
 		}
 		

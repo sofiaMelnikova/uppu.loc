@@ -63,7 +63,11 @@
                             {% endif %}
                         </div>
                     </li>
-                    <form action="#" method="post">
+                    <form action="/update-file" method="post" id="updateUploadedFile">
+                        <input type="hidden" name="user_name" value="{{user.name}}">
+                        <input type="hidden" name="user_countFiles" value="{{user.countFiles}}">
+                        <input type="hidden" name="file_link" value="{{file.link}}">
+                        <input type="hidden" name="file_name" value="{{file.name}}">
                         <li class="list-group-item">
                             <div class="m-t-20 m-b-20">
                                 <div class="file-info-description text-muted m-b-10">
@@ -76,9 +80,13 @@
                                         <label class="text optional" for="fileset_title">Описание</label>
                                     </div>
                                     <div class="col-xs-8 col-sm-9">
-                                        <textarea class="text optional form-control m-b-0 title-input-field" cols="40" id="fileset_title" name="description" rows="3"></textarea>
+                                        <textarea class="text optional form-control m-b-0 title-input-field" cols="40" id="fileset_title" name="description" rows="3">{{file.description}}</textarea>
                                         <p class="help-block">
-                                            <span class="char-count text-muted">0 / 255 символов.</span>
+                                            {% if errors.description is defined %}
+                                                <span class="renderError char-count text-muted">{{errors.description}}</span>
+                                            {% else %}
+                                                <span class="char-count text-muted">0 / 255 символов.</span>
+                                            {% endif %}
                                         </p>
                                     </div>
                                 </div>
@@ -92,11 +100,11 @@
                                         <label class="select optional" for="fileset_lifespan">Срок хранения</label>
                                     </div>
                                     <div class="col-xs-8 col-sm-9">
-                                        <select class="select optional form-control" id="fileset_lifespan" name="lifespan">
-                                            <option value="1">1 день</option>
-                                            <option value="5">5 дней</option>
-                                            <option value="30">30 дней</option>
-                                            <option value="90">90 дней</option>
+                                        <select class="select optional form-control" id="fileset_lifespan" name="lifespanDays">
+                                            <option {% if file.lifespanDays == 1 %} selected {% endif %} value="1">1 день</option>
+                                            <option {% if file.lifespanDays == 5 %} selected {% endif %} value="5">5 дней</option>
+                                            <option {% if file.lifespanDays == 30 %} selected {% endif %} value="30">30 дней</option>
+                                            <option {% if file.lifespanDays == 90 %} selected {% endif %} value="90">90 дней</option>
                                         </select>
                                     </div>
                                 </div>
@@ -112,7 +120,7 @@
                                 </div>
                                 <div class="col-xs-3 col-xs-offset-6">
                                     <div class="pull-right">
-                                        <button class="btn btn-primary file-edit-update" type="submit">
+                                        <button class="btn btn-primary file-edit-update" type="submit" name="idFile" value="{{file.idFile}}">
                                             <i class="fa fa-check"></i>
                                             Обновить
                                         </button>

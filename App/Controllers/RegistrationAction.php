@@ -35,11 +35,13 @@ class RegistrationAction extends AbstractAction {
 			return $response->write($twig->render('RegistrationContent.html', ['errors' => ['email' => 'User already exist with this e-mail'], 'values' => $postParams]));
 		}
 
-		$initCookieString = ($this->getHelper())->getRandomString();
+		$loginModel = $this->getLoginModel();
+
+		$initCookieString = $loginModel->generateLoginCookieString();
 
 		$newUserId = $registrationModel->addNewUser($postParams['userName'], $postParams['email'], $postParams['password'], $initCookieString, $dataBase);
 
-		$toHeadersCookie = ($this->getLoginModel())->setInitCookie($initCookieString);
+		$toHeadersCookie = $loginModel->setInitCookie($initCookieString);
 
 		$addedFileCookie = $request->getCookieParam('added_file');
 

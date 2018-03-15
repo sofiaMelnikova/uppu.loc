@@ -111,4 +111,11 @@ class LoginModel extends AbstractModel {
 		return $this->getUserIdByCookie($loginCookie, $dataBase);
 	}
 
+	/**
+	 * @return string
+	 */
+	public function generateLoginCookieString (): string {
+		return $this->getHelper()->getRandomString() . time();
+	}
+
 }
