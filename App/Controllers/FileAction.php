@@ -7,6 +7,7 @@ use App\ValueObject\UserValueObject;
 use Engine\DataBase;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Slim\Views\Twig;
 
 class FileAction extends AbstractAction {
 
@@ -120,22 +121,48 @@ class FileAction extends AbstractAction {
 				'countFiles' => $countUploadedFiles
 			];
 		}
-		$file = $fileModel->getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($fileName, $dataBase);
+		$fileValueObject = $fileModel->getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($fileName, $dataBase);
 
-		if (empty($file)) {
+		if (empty($fileValueObject)) {
 			return $response->write($twig->render('FileNotFound.html'));
 		}
 
-		$file['link'] = "http://uppu.loc/file/$fileName";
+		$fileValueObject->setLink("http://uppu.loc/file/$fileName");
+
+		$file = $fileValueObject->getParamsAsArray([
+			'id'		=> 'fileId',
+			'name'			=> 'originalName',
+			'description'	=> 'description',
+			'lifespanDays'	=> 'lifespanDays',
+			'link'			=> 'link']);
 
 		return $response->write($twig->render('UploadedFileContent.html', ['file' => $file, 'user' => $user]));
 	}
 
-	public function downloadFileToUserAction(string $fileName, Response $response, DataBase $dataBase) {
+	/**
+	 * @param string $fileName
+	 * @param Response $response
+	 * @param DataBase $dataBase
+	 * @param \Twig_Environment $twig
+	 * @return mixed
+	 */
+	public function downloadFileToUserAction(string $fileName, Response $response, DataBase $dataBase, \Twig_Environment $twig) {
+		$fileModel = $this->getFileModel();
+		$fileValueObject = $fileModel->getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($fileName, $dataBase);
 
-//		header('X-Accel-Redirect: ' . $file);
-//		header('Content-Type: application/octet-stream');
-//		header('Content-Disposition: attachment; filename=' . basename($file));
+		if (empty($fileValueObject)) {
+			return $response->write($twig->render('FileNotFound.html')); // TODO: better show alert, without showing new page
+		}
+
+		return $response
+			->withHeader('X-Accel-Redirect', $fileValueObject->getPathTo())
+			->withHeader('Content-Type', $fileValueObject->getOriginalExtension())
+			->withHeader('Content-Disposition', 'attachment; filename=' . $fileValueObject->getOriginalName())
+			->withHeader('Content-Length' ,$fileValueObject->getSize())
+			->withHeader('Pragma', 'public')
+			->withHeader('Expires', '0')
+			->withHeader('Content-Transfer-Encoding', 'binary')
+			->withRedirect("/file/$fileName");
 	}
 
 }

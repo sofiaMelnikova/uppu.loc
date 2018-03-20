@@ -217,18 +217,23 @@ class FileModel extends AbstractModel {
 	/**
 	 * @param string $name
 	 * @param DataBase $dataBase
-	 * @return array
+	 * @return FileValueObject|null
 	 */
-	public function getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName(string $name, DataBase $dataBase): array {
+	public function getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName(string $name, DataBase $dataBase) {
 		$sqlResponse = $this->getFileTdg($dataBase)->selectIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($name);
-		return $sqlResponse ? [
-			'fileId'		=> (int) $sqlResponse['id'],
-			'pathTo'		=> $sqlResponse['path_to'] . $name,
-			'name'	=> $sqlResponse['original_name'],
-			'mimeType'		=> $sqlResponse['original_extension'],
-			'description'	=> $sqlResponse['description'],
-			'lifespanDays'	=> (int) $sqlResponse['life_time']
-		] : [];
+
+		if ($sqlResponse) {
+			$fileValueObject = $this->getFileValueObject();
+			$fileValueObject->setId((int) $sqlResponse['id']);
+			$fileValueObject->setPathTo($sqlResponse['path_to']);
+			$fileValueObject->setOriginalName($sqlResponse['original_name']);
+			$fileValueObject->setOriginalExtension($sqlResponse['original_extension']);
+			$fileValueObject->setDescription($sqlResponse['description']);
+			$fileValueObject->setLifespanDays((int) $sqlResponse['life_time']);
+			return $fileValueObject;
+		}
+
+		return null;
 	}
 
 
