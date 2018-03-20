@@ -79,14 +79,14 @@ class FileAction extends AbstractAction {
 		// file
 		$fileValueObject = $this->getFileValueObject();
 		$fileValueObject->setLink($postParams['file_link']);
-		$fileValueObject->setName($postParams['file_name']);
+		$fileValueObject->setOriginalName($postParams['file_name']);
 		$fileValueObject->setDescription($postParams['description']);
 		$fileValueObject->setLifespanDays((int)$postParams['lifespanDays']);
 		$fileValueObject->setId((int)$postParams['idFile']);
 
 		$fileParams = $fileValueObject->getParamsAsArray([
 			'link'			=> 'link',
-			'name'			=> 'name',
+			'originalName'	=> 'name',
 			'description'	=> 'description',
 			'lifespanDays'	=> 'lifespanDays',
 			'id'			=> 'idFile',
@@ -130,8 +130,8 @@ class FileAction extends AbstractAction {
 		$fileValueObject->setLink("http://uppu.loc/file/$fileName");
 
 		$file = $fileValueObject->getParamsAsArray([
-			'id'		=> 'fileId',
-			'name'			=> 'originalName',
+			'id'			=> 'fileId',
+			'originalName'	=> 'name',
 			'description'	=> 'description',
 			'lifespanDays'	=> 'lifespanDays',
 			'link'			=> 'link']);
