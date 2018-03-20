@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\ValueObject\FileValueObject;
 use Engine\DataBase;
 use Slim\Http\Cookies;
 use Slim\Http\UploadedFile;
@@ -10,6 +11,13 @@ use Slim\Http\Request;
 use Psr\Http\Message\UploadedFileInterface;
 
 class FileModel extends AbstractModel {
+
+	/**
+	 * @return FileValueObject
+	 */
+	private function getFileValueObject(): FileValueObject {
+		return new FileValueObject();
+	}
 
 	/**
 	 * @param string $value
@@ -20,7 +28,6 @@ class FileModel extends AbstractModel {
 		$cookies->set('added_file', ['value' => $value, 'expires' => '+20 minutes']); //date(‘Y-m-d H:i:s’, time() + 1200)
 		return $cookies->toHeaders();
 	}
-
 
 	/**
 	 * @param array $uploadedFile
@@ -62,6 +69,7 @@ class FileModel extends AbstractModel {
 	 * @param Request $request
 	 * @param DataBase $dataBase
 	 * @return array
+	 * @throws \Exception
 	 */
 	public function uploadedForLogoutUser(string $newFileName, UploadedFileInterface $uploadedFile, Request $request, DataBase $dataBase): array {
 		$addedFileCookie = $request->getCookieParam('added_file');
@@ -71,23 +79,12 @@ class FileModel extends AbstractModel {
 			$toHeadersCookie = $this->setAddedFileCookie($addedFileCookie);
 		}
 
-		$file = [
-			'originalName' => $uploadedFile->getClientFilename(),
-			'originalExtension' => $uploadedFile->getClientMediaType(),
-			'pathTo' => 'Assets/UsersFiles/Image/',
-			'name'	=> $newFileName,
-			'size' => $uploadedFile->getSize(), // File`s size in bytes
-			'type' => 'image',
-			'expireTime' => date('Y-m-d H:i:s', strtotime('+100 days')),
-			'updatedAt' => date('Y-m-d H:i:s')
-		];
+		$fileValueObject = $this->getFileValueObjectForUploaded($newFileName, $uploadedFile);
 
-		$downloadInfo = [
-			'addedFileCookie' => $addedFileCookie,
-			'downloadDate' => date('Y-m-d H:i:s')
-		];
+		$typeId = $this->getTypeIdForFile($fileValueObject->getType(), $dataBase); // TODO: изменить передачу типа, врменно сохраняем только картинки
 
-		$idFile = $this->addNewFileAnonym($dataBase, 'image', $file, $downloadInfo);
+		$idFile = (int) $this->getFileTdg($dataBase)->addNewFileAnonym($fileValueObject, (int)$typeId, $addedFileCookie, date('Y-m-d H:i:s'));
+
 		$countDownloadedFile = $this->getCountFilesByAddedFileCookie($addedFileCookie, $dataBase);
 
 		$result = [
@@ -99,7 +96,7 @@ class FileModel extends AbstractModel {
 			'file' =>
 				[
 					'link' => "http://uppu.loc/file/$newFileName",
-					'name' => $file['originalName'],
+					'name' => $fileValueObject->getOriginalName(),
 					'idFile' => $idFile,
 				],
 			'toHeadersCookie' => $toHeadersCookie ?? ''
@@ -108,8 +105,50 @@ class FileModel extends AbstractModel {
 		return $result;
 	}
 
-	public function uploadedForLoginUser() {
+	/**
+	 * @param string $newFileName
+	 * @param UploadedFileInterface $uploadedFile
+	 * @param Request $request
+	 * @param DataBase $dataBase
+	 * @return array
+	 */
+	public function uploadedForLoginUser(string $newFileName, UploadedFileInterface $uploadedFile, Request $request, DataBase $dataBase): array {
+		$fileValueObject = $this->getFileValueObjectForUploaded($newFileName, $uploadedFile);
 
+		$typeId = $this->getTypeIdForFile($fileValueObject->getType(), $dataBase); // TODO: изменить передачу типа, врменно сохраняем только картинки
+
+		$user = (new UserModel())->getIdNameCountFilesByEnterCookie($request, $dataBase);
+
+		$fileId = (int) $this->getFileTdg($dataBase)->addNewFileByLoginUser($fileValueObject, $typeId, $user['id'], date('Y-m-d H:i:s'));
+
+		$result = [
+			'user' => $user,
+			'file' => [
+				'link' => "http://uppu.loc/file/$newFileName",
+				'name' => $fileValueObject->getOriginalName(),
+				'idFile' => $fileId,
+			],
+		];
+
+		return $result;
+	}
+
+	/**
+	 * @param string $newFileName
+	 * @param UploadedFileInterface $uploadedFile
+	 * @return FileValueObject
+	 */
+	private function getFileValueObjectForUploaded(string $newFileName, UploadedFileInterface $uploadedFile): FileValueObject {
+		$fileValueObject = $this->getFileValueObject();
+		$fileValueObject->setOriginalName($uploadedFile->getClientFilename());
+		$fileValueObject->setOriginalExtension($uploadedFile->getClientMediaType());
+		$fileValueObject->setPathTo("Assets/UsersFiles/Image/$newFileName"); // todo: take path from config
+		$fileValueObject->setName($newFileName);
+		$fileValueObject->setSize($uploadedFile->getSize());
+		$fileValueObject->setType('image'); // todo: take type from property
+		$fileValueObject->setExpireTime(date('Y-m-d H:i:s', strtotime('+100 days')));
+		$fileValueObject->setUpdatedAt(date('Y-m-d H:i:s'));
+		return $fileValueObject;
 	}
 
 	/**
@@ -120,46 +159,6 @@ class FileModel extends AbstractModel {
 	public function getCountUploadedFilesForLogoutUser(Request $request, DataBase $dataBase) {
 		$addedFileCookie = $request->getCookieParam('added_file');
 		return $addedFileCookie ? $this->getCountFilesByAddedFileCookie($addedFileCookie, $dataBase) : 0;
-	}
-
-	/**
-	 * @param DataBase $dataBase
-	 * @param string $type
-	 * @param array $file
-	 * @param array $downloadInfo
-	 * @return int (id new file in table Files)
-	 * @throws \Exception
-	 */
-	public function addNewFileAnonym(DataBase $dataBase, string $type, array $file, array $downloadInfo):int {
-		$typeId = $this->getTypeIdForFile($type, $dataBase);
-
-		if ($typeId === '') {
-			throw new \Exception('Type of uploaded file in absent!');
-		}
-
-		$file['typeId'] = $typeId;
-
-		$fieldsForFile = ['originalName', 'originalExtension', 'pathTo', 'name', 'size', 'typeId', 'expireTime', 'updatedAt'];
-		$fieldsDownloadInfo = ['addedFileCookie', 'downloadDate'];
-
-		$allFieldsForFile = true;
-		$allFieldsForDownloadInfo = true;
-
-		foreach ($fieldsForFile as $fileField) {
-			$allFieldsForFile *= array_key_exists($fileField, $file);
-		}
-		unset($fileField);
-
-		foreach ($fieldsDownloadInfo as $downloadInfoField) {
-			$allFieldsForDownloadInfo *= array_key_exists($downloadInfoField, $downloadInfo);
-		}
-		unset($downloadInfoField);
-
-		if (!$allFieldsForFile || !$allFieldsForDownloadInfo) {
-			throw new \Exception("Can not save in to DB this params: fields params error.");
-		}
-
-		return (int) $this->getFileTdg($dataBase)->addNewFileAnonym($file, $downloadInfo);
 	}
 
 	/**
@@ -177,10 +176,10 @@ class FileModel extends AbstractModel {
 	 * @return array
 	 */
 	public function getAllFileTypes(DataBase $dataBase): array {
-		$resuluRequest = $this->getFileTdg($dataBase)->getAllFileTypes();
+		$resultRequest = $this->getFileTdg($dataBase)->getAllFileTypes();
 		$types = [];
 
-		foreach ($resuluRequest as $value) {
+		foreach ($resultRequest as $value) {
 			array_push($types, $value['type']);
 		}
 
@@ -207,20 +206,18 @@ class FileModel extends AbstractModel {
 	}
 
 	/**
-	 * @param int $fileId
-	 * @param string $description
-	 * @param int $saveFileOnDays
+	 * @param FileValueObject $fileValueObject
 	 * @param DataBase $dataBase
-	 * @return int - count updated string
+	 * @return int
 	 */
-	public function updateUploadedFile(int $fileId, string $description, int $saveFileOnDays, DataBase $dataBase): int {
-		return $this->getFileTdg($dataBase)->updateFile($fileId, $description, $saveFileOnDays);
+	public function updateUploadedFile(FileValueObject $fileValueObject, DataBase $dataBase): int {
+		return $this->getFileTdg($dataBase)->updateFile($fileValueObject);
 	}
 
 	/**
 	 * @param string $name
 	 * @param DataBase $dataBase
-	 * @return array // todo: if return empty array - show page: "File not found. May be the shelf life of the file has expired".
+	 * @return array
 	 */
 	public function getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName(string $name, DataBase $dataBase): array {
 		$sqlResponse = $this->getFileTdg($dataBase)->selectIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($name);

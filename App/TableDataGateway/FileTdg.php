@@ -3,38 +3,31 @@
 namespace App\TableDataGateway;
 
 
+use App\ValueObject\FileValueObject;
+
 class FileTdg extends AbstractTableDataGateway {
 
 	/**
-	 * @param array $file
-	 * @param array $downloadInfo
+	 * @param FileValueObject $fileValueObject
+	 * @param int $typeId
+	 * @param string $addedFileCookie
+	 * @param string $downloadDate
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function addNewFileAnonym(array $file, array $downloadInfo): string {
+	public function addNewFileAnonym(FileValueObject $fileValueObject, int $typeId, string $addedFileCookie, string $downloadDate): string {
 		$this->dataBase->getConnection()->beginTransaction();
 
 		try {
 			try {
-				$query = "INSERT INTO `files` (`original_name`, `original_extension`, `path_to`, `name`, `size`, `type_id`, `expire_time`, `updated_at`) 
-							VALUES (:original_name, :original_extension, :path_to, :name, :size, :type_id, :expire_time, :updated_at);";
-				$params = [
-					':original_name'		=> $file['originalName'],
-					':original_extension'	=> $file['originalExtension'],
-					':path_to'				=> $file['pathTo'],
-					':name'					=> $file['name'],
-					':size'					=> $file['size'],
-					':type_id'				=> $file['typeId'],
-					':expire_time'			=> $file['expireTime'],
-					':updated_at'			=> $file['updatedAt']
-				];
-				$fileId = $this->dataBase->insert($query, $params, true);
+
+				$fileId = $this->insertIntoFilesNewFile($fileValueObject, $typeId);
 
 				$query = "INSERT INTO `downloads_info` (`added_file_cookie`, `file_id`, `download_date`) 
 							VALUES (:added_file_cookie, :file_id, :download_date);";
-				$params = [':added_file_cookie' => $downloadInfo['addedFileCookie'],
+				$params = [':added_file_cookie' => $addedFileCookie,
 					':file_id' => $fileId,
-					':download_date' => $downloadInfo['downloadDate']];
+					':download_date' => $downloadDate];
 
 				$this->dataBase->insert($query, $params);
 
@@ -49,6 +42,64 @@ class FileTdg extends AbstractTableDataGateway {
 
 		$this->dataBase->getConnection()->commit();
 		return $fileId;
+	}
+
+	/**
+	 * @param FileValueObject $fileValueObject
+	 * @param int $typeId
+	 * @param string $userId
+	 * @param string $downloadDate
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function addNewFileByLoginUser(FileValueObject $fileValueObject, int $typeId, string $userId, string $downloadDate): string {
+		$this->dataBase->getConnection()->beginTransaction();
+
+		try {
+			try {
+
+				$fileId = $this->insertIntoFilesNewFile($fileValueObject, $typeId);
+
+				$query = "INSERT INTO `downloads_info` (`user_id`, `file_id`, `download_date`) 
+							VALUES (:user_id, :file_id, :download_date);";
+				$params = [':user_id' => $userId,
+					':file_id' => $fileId,
+					':download_date' => $downloadDate];
+
+				$this->dataBase->insert($query, $params);
+
+			} catch (\Error $error) {
+				$this->dataBase->getConnection()->rollBack();
+				throw new \Exception("Message:\n" . $error->getMessage() ."\n" . "Trace:\n" . $error->getTraceAsString());
+			}
+		} catch (\Exception $exception) {
+			$this->dataBase->getConnection()->rollBack();
+			throw new \Exception("Message:\n" . $exception->getMessage() ."\n" . "Trace:\n" . $exception->getTraceAsString());
+		}
+
+		$this->dataBase->getConnection()->commit();
+		return $fileId;
+	}
+
+	/**
+	 * @param FileValueObject $fileValueObject
+	 * @param int $typeId
+	 * @return string
+	 */
+	private function insertIntoFilesNewFile(FileValueObject $fileValueObject, int $typeId): string {
+		$query = "INSERT INTO `files` (`original_name`, `original_extension`, `path_to`, `name`, `size`, `type_id`, `expire_time`, `updated_at`) 
+							VALUES (:original_name, :original_extension, :path_to, :name, :size, :type_id, :expire_time, :updated_at);";
+		$params = [
+			':original_name'		=> $fileValueObject->getOriginalName(),
+			':original_extension'	=> $fileValueObject->getOriginalExtension(),
+			':path_to'				=> $fileValueObject->getPathTo(),
+			':name'					=> $fileValueObject->getName(),
+			':size'					=> $fileValueObject->getSize(),
+			':type_id'				=> $typeId,
+			':expire_time'			=> $fileValueObject->getExpireTime(),
+			':updated_at'			=> $fileValueObject->getUpdatedAt()
+		];
+		return $this->dataBase->insert($query, $params, true);
 	}
 
 	/**
@@ -92,22 +143,20 @@ class FileTdg extends AbstractTableDataGateway {
 	}
 
 	/**
-	 * @param int $fileId
-	 * @param string $description
-	 * @param int $saveFileOnDays
-	 * @return int - count changes string
+	 * @param FileValueObject $fileValueObject
+	 * @return int
 	 */
-	public function updateFile(int $fileId, string $description, int $saveFileOnDays): int {
+	public function updateFile(FileValueObject $fileValueObject): int {
 		$query = "SELECT `download_date` FROM `downloads_info` WHERE `file_id` = :file_id;";
-		$params = [':file_id' => $fileId];
+		$params = [':file_id' => $fileValueObject->getId()];
 		$downloadDate = $this->dataBase->select($query, $params, false)['download_date'];
 		$query = "UPDATE `files` SET `description` = :description, 
 				  `expire_time` = DATE_ADD(:download_date, INTERVAL :save_file_on_n_days DAY) WHERE id = :id";
 		$params = [
 			':download_date'		=> $downloadDate,
-			':id'					=> $fileId,
-			':description'			=> $description,
-			':save_file_on_n_days'	=> $saveFileOnDays
+			':id'					=> $fileValueObject->getId(),
+			':description'			=> $fileValueObject->getDescription(),
+			':save_file_on_n_days'	=> $fileValueObject->getLifespanDays()
 		];
 		return $this->dataBase->update($query, $params);
 	}
@@ -123,5 +172,4 @@ class FileTdg extends AbstractTableDataGateway {
 		$params = [':name' => $fileName];
 		return $this->dataBase->select($query, $params, false);
 	}
-
 }

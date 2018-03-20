@@ -2,11 +2,29 @@
 
 namespace App\Controllers;
 
+use App\ValueObject\FileValueObject;
+use App\ValueObject\UserValueObject;
 use Engine\DataBase;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
 class FileAction extends AbstractAction {
+
+	/**
+	 * @return FileValueObject
+	 */
+	private function getFileValueObject(): FileValueObject {
+		return new FileValueObject();
+	}
+
+	/**
+	 * @param string $name
+	 * @param int $countFiles
+	 * @return UserValueObject
+	 */
+	private function getUserValueObject(string $name = '', int $countFiles = 0): UserValueObject {
+		return new UserValueObject($name, $countFiles);
+	}
 
 	/**
 	 * @param Request $request
@@ -27,18 +45,9 @@ class FileAction extends AbstractAction {
 
 		$newFileName = $fileModel->moveUploadedFile($uploadedFile['uploadedFile']);
 
-		$loginModel = $this->getLoginModel();
-
-		$loginModel->isLoginUser($request, $dataBase);
-
-		//////////////////////////////////////_uploadedForLogoutUser_MODEL_FILE////////////////////
-
-		$result = $fileModel->uploadedForLogoutUser($newFileName, $uploadedFile['uploadedFile'], $request, $dataBase);
-
-		////////////////////////////////////////////////////////////////////////////////////////////
-
-		// TODO: add user params for login user and downloading for login user
-
+		$result = $this->getLoginModel()->isLoginUser($request, $dataBase) ?
+			$fileModel->uploadedForLoginUser($newFileName, $uploadedFile['uploadedFile'], $request, $dataBase) :
+			$fileModel->uploadedForLogoutUser($newFileName, $uploadedFile['uploadedFile'], $request, $dataBase);
 
 		return empty($result['toHeadersCookie']) ?
 			$response
@@ -62,26 +71,33 @@ class FileAction extends AbstractAction {
 		$postParams = $request->getParsedBody();
 		$errors = ($this->getValidator())->validateDescriptionFile($postParams['description']);
 
-		$user = [
-			'name' => $postParams['user_name'],
-			'countFiles' => $postParams['user_countFiles'],
-		];
+		// user
+		$userValueObject = $this->getUserValueObject($postParams['user_name'], $postParams['user_countFiles']);
+		$userParams = $userValueObject->getParamsAsArray();
 
-		$file = [
-			'link' => $postParams['file_link'], // TODO: create download link end sav to database before show UploadedFileContent page
-			'name' => $postParams['file_name'],
-			'description' => $postParams['description'],
-			'lifespanDays' => $postParams['lifespanDays'],
-			'idFile' => $postParams['idFile'],
-		];
+		// file
+		$fileValueObject = $this->getFileValueObject();
+		$fileValueObject->setLink($postParams['file_link']);
+		$fileValueObject->setName($postParams['file_name']);
+		$fileValueObject->setDescription($postParams['description']);
+		$fileValueObject->setLifespanDays((int)$postParams['lifespanDays']);
+		$fileValueObject->setId((int)$postParams['idFile']);
+
+		$fileParams = $fileValueObject->getParamsAsArray([
+			'link'			=> 'link',
+			'name'			=> 'name',
+			'description'	=> 'description',
+			'lifespanDays'	=> 'lifespanDays',
+			'id'			=> 'idFile',
+		]);
 
 		if (!empty($errors)) {
-			return $response->write($twig->render('UploadedFileContent.html', ['errors' => ['description' => $errors], 'file' => $file, 'user' => $user]));
+			return $response->write($twig->render('UploadedFileContent.html', ['errors' => ['description' => $errors], 'file' => $fileParams, 'user' => $userParams]));
 		}
 
-		$fileModel->updateUploadedFile($file['idFile'], $file['description'], $file['lifespanDays'], $dataBase);
+		$fileModel->updateUploadedFile($fileValueObject, $dataBase);
 
-		return $response->write($twig->render('UploadedFileContent.html', ['file' => $file, 'user' => $user]));
+		return $response->write($twig->render('UploadedFileContent.html', ['file' => $fileParams, 'user' => $userParams]));
 	}
 
 	/**
