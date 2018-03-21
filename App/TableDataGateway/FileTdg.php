@@ -166,8 +166,8 @@ class FileTdg extends AbstractTableDataGateway {
 	 * @return array|bool
 	 */
 	public function selectIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName(string $fileName) {
-		$query = "SELECT `files`.`id`, `files`.`path_to`, `files`.`original_name`, `files`.`original_extension`, `files`.`description`, 
-					DATEDIFF(`files`.`expire_time`, `downloads_info`.`download_date`) AS `life_time`
+		$query = "SELECT `files`.`id`, `files`.`path_to`, `files`.`original_name`, `files`.`original_extension`, `files`.`description`,`files`.`size`, 
+					DATEDIFF(`files`.`expire_time`, `downloads_info`.`download_date`) AS `life_time`, `downloads_info`.`download_date`
 					FROM `files` LEFT JOIN `downloads_info` ON `downloads_info`.`file_id` = `files`.`id` WHERE `files`.`name` = :name;";
 		$params = [':name' => $fileName];
 		return $this->dataBase->select($query, $params, false);

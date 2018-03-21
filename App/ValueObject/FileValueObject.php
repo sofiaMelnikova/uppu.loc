@@ -65,6 +65,11 @@ class FileValueObject {
 	 */
 	private $updatedAt = '';
 
+	/**
+	 * @var string
+	 */
+	private $downloadDate = '';
+
 
 	/*******************************************************************************
 	 * Setters
@@ -152,6 +157,13 @@ class FileValueObject {
 	 */
 	public function setUpdatedAt(string $updatedAt) {
 		$this->updatedAt = $updatedAt;
+	}
+
+	/**
+	 * @param string $downloadDate
+	 */
+	public function setDownloadDate(string $downloadDate) {
+		$this->downloadDate = $downloadDate;
 	}
 
 	/*******************************************************************************
@@ -242,6 +254,13 @@ class FileValueObject {
 		return $this->updatedAt;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function getDownloadDate(): string {
+		return $this->downloadDate;
+	}
+
 	/*******************************************************************************
 	 * Handlers
 	 ******************************************************************************/
@@ -264,7 +283,8 @@ class FileValueObject {
 			'lifespanDays'		=> 'lifespanDays',
 			'description'		=> 'description',
 			'link'				=> 'link',
-			'updatedAt'			=> 'updatedAt'
+			'updatedAt'			=> 'updatedAt',
+			'downloadDate'		=> 'downloadDate'
 		]
 	): array {
 		$result = [];

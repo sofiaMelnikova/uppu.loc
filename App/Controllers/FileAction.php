@@ -141,6 +141,38 @@ class FileAction extends AbstractAction {
 
 	/**
 	 * @param string $fileName
+	 * @param Request $request
+	 * @param Response $response
+	 * @param DataBase $dataBase
+	 * @param \Twig_Environment $twig
+	 * @return mixed
+	 */
+	public function viewPageDownloadingFileToUserAction(string $fileName, Request $request, Response $response, DataBase $dataBase, \Twig_Environment $twig) {
+		$fileModel = $this->getFileModel();
+
+		if ($this->getLoginModel()->isLoginUser($request, $dataBase)) {
+			$userParams = $this->getUserModel()->getIdNameCountFilesByEnterCookie($request, $dataBase);
+		} else {
+			$userParams['countFiles'] = $fileModel->getCountUploadedFilesForLogoutUser($request, $dataBase);
+		}
+
+		$fileValueObject = $fileModel->getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($fileName, $dataBase);
+
+		$fileParams = $fileValueObject->getParamsAsArray([
+			'originalName'	=> 'originalName',
+			'name'			=> 'name',
+			'downloadDate'	=> 'downloadDate',
+			'size'			=> 'sizeKb',
+			'pathTo'		=> 'pathTo',
+		]);
+
+		$fileParams['sizeKb'] = (int) ($fileParams['sizeKb'] / 10024);
+
+		return $response->write($twig->render('GetFileContent.html', ['file' => $fileParams, 'user' => $userParams]));
+	}
+
+	/**
+	 * @param string $fileName
 	 * @param Response $response
 	 * @param DataBase $dataBase
 	 * @param \Twig_Environment $twig

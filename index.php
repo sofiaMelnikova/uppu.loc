@@ -80,8 +80,15 @@ $app->get('/edit-file/{name}', function ($request, $response, $args) use ($app) 
 		);
 });
 
-$app->get('/file/{name}', function () use ($app) {
-
+$app->get('/file/{name}', function ($request, $response, $args) use ($app) {
+	return $app->getContainer()->get('File.Controller')
+		->viewPageDownloadingFileToUserAction(
+			$args['name'],
+			$request,
+			$response,
+			$app->getContainer()->get('DataBase'),
+			$app->getContainer()->get('twig')
+		);
 });
 
 $app->post('/get-file/{name}', function () use ($app) {
@@ -106,10 +113,9 @@ $app->post('/update-file', function () use ($app) {
 //			]));
 //})->prepare();
 
-$app->get('/test[/{test}]', function ($request, $response, $args) use ($app) {
-	$res = (new \App\TableDataGateway\FileTdg($app->getContainer()->get('DataBase')))->selectIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName('7KLj1lJ1521104828');
-	var_dump($res);
-	die();
+$app->get('/test', function (\Slim\Http\Request $request, \Slim\Http\Response $response, $args) use ($app) {
+	$response->write($app->getContainer()->get('twig')->render('GetFileContent.html'));
+
 //	if (empty($args['test'])) { // использовать вместо этого что-то подобное before/after
 //		var_dump(123);
 //		die();

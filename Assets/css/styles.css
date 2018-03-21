@@ -511,3 +511,117 @@ body {
 .file-edit-update {
 
 }
+
+.media-list {
+    padding-left: 0;
+    list-style: none;
+}
+
+.list-group {
+    margin-bottom: 20px;
+    padding-left: 0;
+}
+
+.media-left, .media-right, .media-body {
+    display: table-cell;
+    vertical-align: top;
+}
+
+.media-left {
+    padding-right: 10px;
+}
+
+.user-icon-for-comment {
+    color: white;
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
+    padding-top: 4px;
+    margin-top: 3px;
+}
+
+.user-icon {
+    color: white;
+    height: 35px;
+    width: 35px;
+    min-width: 35px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    vertical-align: middle;
+    text-align: center;
+    display: inline-block;
+    font-size: 22px;
+}
+
+.little-icon-background-color {
+    background-color: #d3e0e9;
+}
+
+.media-preview {
+    max-height: 350px;
+    overflow: hidden;
+    border-radius: 4px;
+    vertical-align: top;
+}
+
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.m-b-25 {
+    margin-bottom: 25px !important;
+}
+
+.m-t-35 {
+    margin-top: 35px !important;
+}
+
+.bg-for-fileinfo {
+    background-color: #f5f8fa;
+    border-color: #d3e0e9;
+}
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+    margin-bottom: -1px;
+    background-color: #fff;
+    border: 1px solid #d3e0e9;
+}
+
+.file-info-icon {
+    line-height: 0;
+    padding-right: 5px;
+    min-width: 0px;
+}
+
+.icon-ext {
+    font-size: 45px;
+}
+
+.media-group-image {
+    color: #50BA50;
+}
+
+.visible-xs, .visible-sm, .visible-md, .visible-lg {
+    display: none !important;
+}
+
+.visible-lg {
+    display: block !important;
+}
+
+.nowrap {
+    white-space: nowrap;
+}
+
+.color-light-gray {
+    color: #9da9b0;
+}
+
+.file-info-time-block {
+    white-space: nowrap !important;
+}

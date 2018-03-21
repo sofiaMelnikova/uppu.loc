@@ -1,5 +1,131 @@
 {% include 'Header.html' %}
 
+<div class="mainUploadedFileContent">
+    <div class="page-file-show row">
+        <div class="col-sm-5 col-md-4 col-lg-3">
+            <div class="panel panel-default panel-profile">
+                <div class="panel-heading panel-profile-hseading"></div>
+                <div class="panel-body text-center">
+                    <div class="avatar-block center-block">
+                        <a href="/" class="circle-profile-link for-tag-a">
+                            <div class="circle-block for-link-profile-A">
+                                A
+                            </div>
+                        </a>
+                    </div>
+                    <h5 class="panel-title panel-profile-nickname m-t-15 m-b-15">
+                        <a href="/" class="color-for-nickname" title="{% if user.name is defined %} {{user.name}} {% else %} Anonymously {% endif %}">
+                            {% if user.name is defined %}
+                            {{user.name}}
+                            {% else %}
+                            Anonymously
+                            {% endif %}
+                        </a>
+                    </h5>
+                    <ul class="panel-menu">
+                        <li>
+                            <a href="#" class="text-inherit">
+                                {% if user.countFiles is defined %}
+                                My files
+                                <h5 class="m-y-0"> {{user.countFiles}} </h5>
+                                {% endif %}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
+        <div class="col-sm-7 col-md-8 col-lg-6">
+            <ul class="media-list media-list-users list-group">
+                <li class="list-group-item">
+                    <div class="media m-b-15">
+                        <div class="media-left file-list-avatar">
+                            <div class="user-icon user-icon-for-comment flat-icon little-icon-background-color">
+                                <b>A</b>
+                            </div>
+                        </div>
+                        <div class="file-list-user-name" title="{{user.name}}">
+                            <b>
+                                {% if user.name is defined %}
+                                {{user.name}}
+                                {% else %}
+                                Anonymously
+                                {% endif %}
+                            </b>
+                        </div>
+                    </div>
+                    <div class="file-show-title">
+                        <p class="lead">
+                            <span>
+                                {% if file.originalName is empty %}
+                                    __EnterOriginalFileName__
+                                {% else %}
+                                    {{ file.originalName }}
+                                {% endif %}
+                            </span>
+                        </p>
+                    </div>
+                    <section>
+                        <div class="media-preview">
+                            <img src="{{file.pathTo}}" class="img-responsive" style="top: -101.5px;">
+                        </div>
+                    </section>
+                    <div class="file-show-info m-b-25">
+                        <ul class="list-group m-t-35">
+                            <li class="list-group-item file-show-info-block bg-for-fileinfo">
+                                <div class="row">
+                                    <div class="col-lg-12 flie-info-block">
+                                        <div class="media">
+                                            <div class="media-left file-info-icon">
+                                                <div class="icon icon-ext icon-ext-custom media-group-image"></div>
+                                            </div>
+                                            <div class="media-body">
+                                                <div class="file-info-filename-lg visible-md visible-lg">
+                                                    <div class="filename" title="{{file.originalName}}">
+                                                        <span title="">
+                                                            <span>
+                                                                <b>
+                                                                    {% if file.originalName is empty %}
+                                                                        __EnterOriginalFileName__
+                                                                    {% else %}
+                                                                        {{ file.originalName }}
+                                                                    {% endif %}
+                                                                </b>
+                                                            </span>
+                                                            <i class="nowrap">({{ file.sizeKb }} КБ)</i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="file-info-username color-light-gray">
+                                                <span>
+                                                    <span class="info-date">
+                                                        <time class="file-info-time-block">Файл был загружен {{ file.downloadDate }}</time>
+                                                    </span>
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="file-info-btns-block m-b-10 m-t-15">
+                        <button formmethod="post" href="/get-file/{{file.name}}" class="btn btn-primary btn-download m-t-10 m-b-5" id="download-btn" rel="nofollow" title="Скачать {{ file.originalName }}">
+                            <i class="fa fa-download"></i>
+                            Скачать
+                        </button>
+                    </div>
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+</div>
 
 {% include 'Footer.html' %}

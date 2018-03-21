@@ -85,13 +85,13 @@ class FileModel extends AbstractModel {
 
 		$idFile = (int) $this->getFileTdg($dataBase)->addNewFileAnonym($fileValueObject, (int)$typeId, $addedFileCookie, date('Y-m-d H:i:s'));
 
-		$countDownloadedFile = $this->getCountFilesByAddedFileCookie($addedFileCookie, $dataBase);
+		$countDownloadedFile = $this->getCountUploadedFilesForLogoutUser($request, $dataBase);
 
 		$result = [
 			'user' =>
 				[
 					'name' => '',
-					'countFiles' => $countDownloadedFile ?? '',
+					'countFiles' => $countDownloadedFile,
 				],
 			'file' =>
 				[
@@ -156,7 +156,7 @@ class FileModel extends AbstractModel {
 	 * @param DataBase $dataBase
 	 * @return int
 	 */
-	public function getCountUploadedFilesForLogoutUser(Request $request, DataBase $dataBase) {
+	public function getCountUploadedFilesForLogoutUser(Request $request, DataBase $dataBase) { //
 		$addedFileCookie = $request->getCookieParam('added_file');
 		return $addedFileCookie ? $this->getCountFilesByAddedFileCookie($addedFileCookie, $dataBase) : 0;
 	}
@@ -201,7 +201,7 @@ class FileModel extends AbstractModel {
 	 * @param DataBase $dataBase
 	 * @return int
 	 */
-	public function getCountFilesByAddedFileCookie(string $addedFileCookie, DataBase $dataBase): int {
+	private function getCountFilesByAddedFileCookie(string $addedFileCookie, DataBase $dataBase): int {
 		return (int) $this->getFileTdg($dataBase)->getCountFilesByAddedFileCookie($addedFileCookie)['COUNT(*)'];
 	}
 
@@ -230,6 +230,8 @@ class FileModel extends AbstractModel {
 			$fileValueObject->setOriginalExtension($sqlResponse['original_extension']);
 			$fileValueObject->setDescription($sqlResponse['description']);
 			$fileValueObject->setLifespanDays((int) $sqlResponse['life_time']);
+			$fileValueObject->setDownloadDate($sqlResponse['download_date']);
+			$fileValueObject->setSize((int)$sqlResponse['size']);
 			return $fileValueObject;
 		}
 
