@@ -121,7 +121,7 @@ class FileAction extends AbstractAction {
 				'countFiles' => $countUploadedFiles
 			];
 		}
-		$fileValueObject = $fileModel->getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($fileName, $dataBase);
+		$fileValueObject = $fileModel->selectInfoForDownloadingFileByName($fileName, $dataBase);
 
 		if (empty($fileValueObject)) {
 			return $response->write($twig->render('FileNotFound.html'));
@@ -156,7 +156,7 @@ class FileAction extends AbstractAction {
 			$userParams['countFiles'] = $fileModel->getCountUploadedFilesForLogoutUser($request, $dataBase);
 		}
 
-		$fileValueObject = $fileModel->getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($fileName, $dataBase);
+		$fileValueObject = $fileModel->selectInfoForDownloadingFileByName($fileName, $dataBase);
 
 		$fileParams = $fileValueObject->getParamsAsArray([
 			'originalName'	=> 'originalName',
@@ -180,7 +180,7 @@ class FileAction extends AbstractAction {
 	 */
 	public function downloadFileToUserAction(string $fileName, Response $response, DataBase $dataBase, \Twig_Environment $twig) {
 		$fileModel = $this->getFileModel();
-		$fileValueObject = $fileModel->getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($fileName, $dataBase);
+		$fileValueObject = $fileModel->selectInfoForDownloadingFileByName($fileName, $dataBase);
 
 		if (empty($fileValueObject)) {
 			return $response->write($twig->render('FileNotFound.html')); // TODO: better show alert, without showing new page

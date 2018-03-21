@@ -219,8 +219,8 @@ class FileModel extends AbstractModel {
 	 * @param DataBase $dataBase
 	 * @return FileValueObject|null
 	 */
-	public function getIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName(string $name, DataBase $dataBase) {
-		$sqlResponse = $this->getFileTdg($dataBase)->selectIdPathToOriginalNameOriginalExtensionDescriptionLifeTimeFilesByName($name);
+	public function selectInfoForDownloadingFileByName(string $name, DataBase $dataBase) {
+		$sqlResponse = $this->getFileTdg($dataBase)->selectInfoForDownloadingFileByName($name);
 
 		if ($sqlResponse) {
 			$fileValueObject = $this->getFileValueObject();
