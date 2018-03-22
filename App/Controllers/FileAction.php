@@ -213,11 +213,11 @@ class FileAction extends AbstractAction {
 
 		if ($userHashId === 'anonymously') {
 			$files = $fileModel->getAllUsersFilesByAddedCookie($request, $dataBase);
-			$user = $userModel->getIdNameCountFilesByEnterCookie($request, $dataBase);
+			$user['countFiles'] = $fileModel->getCountUploadedFilesForLogoutUser($request, $dataBase);
 		} else {
 			$userId = $userModel->getUserIdByUserIdHash($userHashId, $dataBase);
 			$files = $fileModel->getAllUsersFilesByUserId($userId, $dataBase);
-			$user['countFiles'] = $fileModel->getCountUploadedFilesForLogoutUser($request, $dataBase);
+			$user = $userModel->getIdNameCountFilesByEnterCookie($request, $dataBase);
 		}
 
 		if (empty($files)) {
