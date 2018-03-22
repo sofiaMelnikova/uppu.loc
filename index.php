@@ -49,7 +49,11 @@ $app->get('/login', function () use ($app) {
 });
 
 $app->get('/profile', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('ProfileContent.html'));
+	return $app->getContainer()->get('User.Controller')
+		->viewProfileAction($app->getContainer()->get('request'),
+			$app->getContainer()->get('response'),
+			$app->getContainer()->get('DataBase'),
+			$app->getContainer()->get('twig'));
 });
 
 $app->get('/', function () use ($app) {
@@ -110,6 +114,16 @@ $app->post('/update-file', function () use ($app) {
 	);
 });
 
+$app->get('/users-files/{userHashId}', function ($request, $response, $args) use ($app) {
+	return $app->getContainer()->get('File.Controller')->viewPageUsersFilesToUserAction(
+		$args['userHashId'],
+		$request,
+		$response,
+		$app->getContainer()->get('DataBase'),
+		$app->getContainer()->get('twig')
+	);
+});
+
 //$app->get('/uploaded-file/{userName}/{userCountFiles}/{fileLink}/{fileName}', function ($request, \Slim\Http\Response $response, $args) use ($app) {
 //	return $response->write($app->getContainer()->get('twig')
 //		->render('UploadedFileContent.html',
@@ -119,8 +133,10 @@ $app->post('/update-file', function () use ($app) {
 //			]));
 //})->prepare();
 
-$app->get('/test', function (\Slim\Http\Request $request, \Slim\Http\Response $response, $args) use ($app) {
-	$response->write($app->getContainer()->get('twig')->render('GetFileContent.html'));
+$app->get('/test/{a}', function ($request, $response, $args) use ($app) {
+	var_dump($args['a']);
+	die();
+//	$response->write($app->getContainer()->get('twig')->render('UsersFiles.html'));
 
 //	if (empty($args['test'])) { // использовать вместо этого что-то подобное before/after
 //		var_dump(123);

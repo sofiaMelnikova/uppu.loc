@@ -625,3 +625,33 @@ body {
 .file-info-time-block {
     white-space: nowrap !important;
 }
+
+.file-list-fileitem:first-child {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+}
+
+.file-list-fileitem:not(.table-list-item) {
+    padding-bottom: 10px !important;
+}
+
+.file-list-fileitem {
+    cursor: pointer;
+}
+
+.color-black {
+    color: #1e3948;
+}
+
+.file-show-title, .file-list-title {
+    word-break: break-all;
+}
+
+.file-list-fileitem .file-show-info, .file-list-fileitem .list-group {
+    margin-top: 15px !important;
+    margin-bottom: 11px !important;
+}
+
+.media-group-binary {
+    color: #536570;
+}

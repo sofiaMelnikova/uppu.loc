@@ -9,25 +9,29 @@
                     <div class="avatar-block center-block">
                         <a href="/" class="circle-profile-link for-tag-a">
                             <div class="circle-block for-link-profile-A">
-                                A
+                                {% if user.name is defined %}
+                                    {{user.name|first}}
+                                {% else %}
+                                    A
+                                {% endif %}
                             </div>
                         </a>
                     </div>
                     <h5 class="panel-title panel-profile-nickname m-t-15 m-b-15">
                         <a href="/" class="color-for-nickname" title="{% if user.name is defined %} {{user.name}} {% else %} Anonymously {% endif %}">
                             {% if user.name is defined %}
-                            {{user.name}}
+                                {{user.name}}
                             {% else %}
-                            Anonymously
+                                Anonymously
                             {% endif %}
                         </a>
                     </h5>
                     <ul class="panel-menu">
                         <li>
-                            <a href="#" class="text-inherit">
+                            <a href="/users-files/{% if user.hashUserId is defined %}{{user.hashUserId}}{% else %}anonymously{% endif %}" class="text-inherit">
                                 {% if user.countFiles is defined %}
-                                My files
-                                <h5 class="m-y-0"> {{user.countFiles}} </h5>
+                                    My files
+                                    <h5 class="m-y-0"> {{user.countFiles}} </h5>
                                 {% endif %}
                             </a>
                         </li>
@@ -42,15 +46,21 @@
                     <div class="media m-b-15">
                         <div class="media-left file-list-avatar">
                             <div class="user-icon user-icon-for-comment flat-icon little-icon-background-color">
-                                <b>A</b>
+                                <b>
+                                    {% if user.name is defined %}
+                                        {{user.name|first}}
+                                    {% else %}
+                                        A
+                                    {% endif %}
+                                </b>
                             </div>
                         </div>
                         <div class="file-list-user-name" title="{{user.name}}">
                             <b>
                                 {% if user.name is defined %}
-                                {{user.name}}
+                                    {{user.name}}
                                 {% else %}
-                                Anonymously
+                                    Anonymously
                                 {% endif %}
                             </b>
                         </div>
@@ -78,7 +88,7 @@
                                     <div class="col-lg-12 flie-info-block">
                                         <div class="media">
                                             <div class="media-left file-info-icon">
-                                                <div class="icon icon-ext icon-ext-custom media-group-image"></div>
+                                                <div class="file-{{file.originalName|split('.')|last}} icon icon-ext icon-ext-custom media-group-image"></div>
                                             </div>
                                             <div class="media-body">
                                                 <div class="file-info-filename-lg visible-md visible-lg">

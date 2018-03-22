@@ -16,6 +16,9 @@ return [
 	'File.Controller' => function () {
 		return new \App\Controllers\FileAction();
 	},
+	'User.Controller' => function () {
+		return new \App\Controllers\UserAction();
+	},
 	'Login.Model' => function () {
 		return new \App\Models\LoginModel();
 	},

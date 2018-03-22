@@ -24,8 +24,29 @@ class UserModel extends AbstractModel {
 		return [
 			'id'		=> $sqlResponse['id'],
 			'name'		=> $sqlResponse['name'],
-			'countFiles'	=> $sqlResponse['COUNT(*)']
+			'countFiles'	=> $sqlResponse['COUNT(*)'],
+			'hashUserId' => str_replace('/', '_', password_hash($sqlResponse['id'], PASSWORD_BCRYPT))
 		];
+	}
+
+	/**
+	 * @param string $hashId
+	 * @param DataBase $dataBase
+	 * @return int
+	 */
+	public function getUserIdByUserIdHash(string $hashId, DataBase $dataBase): int {
+		$sqlResult = $this->getUserTdg($dataBase)->selectActiveUsersId();
+		$usersIds = array_column($sqlResult, 'id');
+		$actualUserId = 0;
+
+		foreach ($usersIds as $userId) {
+			if (password_verify($userId, $hashId)) {
+				$actualUserId = (int) $userId;
+				break;
+			}
+		}
+
+		return $actualUserId;
 	}
 
 }

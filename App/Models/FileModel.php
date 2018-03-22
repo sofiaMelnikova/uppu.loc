@@ -6,7 +6,6 @@ namespace App\Models;
 use App\ValueObject\FileValueObject;
 use Engine\DataBase;
 use Slim\Http\Cookies;
-use Slim\Http\UploadedFile;
 use Slim\Http\Request;
 use Psr\Http\Message\UploadedFileInterface;
 
@@ -220,7 +219,7 @@ class FileModel extends AbstractModel {
 	 * @return FileValueObject|null
 	 */
 	public function selectInfoForDownloadingFileByName(string $name, DataBase $dataBase) {
-		$sqlResponse = $this->getFileTdg($dataBase)->selectInfoForDownloadingFileByName($name);
+		$sqlResponse = $this->getFileTdg($dataBase)->selectInfoForDownloadingAndShowingFileByName($name);
 
 		if ($sqlResponse) {
 			$fileValueObject = $this->getFileValueObject();
@@ -236,6 +235,52 @@ class FileModel extends AbstractModel {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @param int $userId
+	 * @param DataBase $dataBase
+	 * @return array
+	 */
+	public function getAllUsersFilesByUserId(int $userId, DataBase $dataBase): array {
+		if (empty($userId)) {
+			return [];
+		}
+
+		$responseSql = $this->getFileTdg($dataBase)->selectInfoForDownloadingAndShowingAllUsersFilesByUserId($userId);
+		return $this->getSizeFilesFromByteToKb($responseSql);
+	}
+
+	/**
+	 * @param Request $request
+	 * @param DataBase $dataBase
+	 * @return array
+	 */
+	public function getAllUsersFilesByAddedCookie(Request $request, DataBase $dataBase): array {
+		$addedFileCookie = $request->getCookieParam('added_file');
+
+		if (empty($addedFileCookie)) {
+			return [];
+		}
+
+		$responseSql = $this->getFileTdg($dataBase)->selectInfoForDownloadingAndShowingAllUsersFilesByAddedCookie($addedFileCookie);
+		return $this->getSizeFilesFromByteToKb($responseSql);
+	}
+
+	/**
+	 * @param array $files
+	 * @return array
+	 */
+	private function getSizeFilesFromByteToKb(array $files): array {
+		if (empty($files)) {
+			return [];
+		}
+
+		foreach ($files as $key => $file) {
+			$files[$key]['sizeKb'] = round($file['sizeKb'] / 10024, 2);
+		}
+
+		return $files;
 	}
 
 

@@ -165,11 +165,35 @@ class FileTdg extends AbstractTableDataGateway {
 	 * @param string $fileName
 	 * @return array|bool
 	 */
-	public function selectInfoForDownloadingFileByName(string $fileName) {
+	public function selectInfoForDownloadingAndShowingFileByName(string $fileName) {
 		$query = "SELECT `files`.`id`, `files`.`path_to`, `files`.`original_name`, `files`.`original_extension`, `files`.`description`,`files`.`size`, 
 					DATEDIFF(`files`.`expire_time`, `downloads_info`.`download_date`) AS `life_time`, `downloads_info`.`download_date`
 					FROM `files` LEFT JOIN `downloads_info` ON `downloads_info`.`file_id` = `files`.`id` WHERE `files`.`name` = :name;";
 		$params = [':name' => $fileName];
 		return $this->dataBase->select($query, $params, false);
+	}
+
+	/**
+	 * @param int $userId
+	 * @return array
+	 */
+	public function selectInfoForDownloadingAndShowingAllUsersFilesByUserId(int $userId): array {
+		$query = "SELECT `files`.`id`, `files`.`path_to` AS `pathTo`, `files`.`original_name` AS `originalName`, `files`.`original_extension` as `originalExtension`, `files`.`description`,`files`.`size` AS `sizeKb`,
+					DATEDIFF(`files`.`expire_time`, `downloads_info`.`download_date`) AS `lifeTime`, `downloads_info`.`download_date` AS `downloadDate`, `files`.`name`
+					FROM `files` LEFT JOIN `downloads_info` ON `downloads_info`.`file_id` = `files`.`id` WHERE `downloads_info`.`user_id` = :user_id;";
+		$params = [':user_id' => $userId];
+		return $this->dataBase->select($query, $params);
+	}
+
+	/**
+	 * @param string $addedFileCookie
+	 * @return array
+	 */
+	public function selectInfoForDownloadingAndShowingAllUsersFilesByAddedCookie(string $addedFileCookie): array {
+		$query = "SELECT `files`.`id`, `files`.`path_to` AS `pathTo`, `files`.`original_name` AS `originalName`, `files`.`original_extension` as `originalExtension`, `files`.`description`,`files`.`size` AS `sizeKb`,
+					DATEDIFF(`files`.`expire_time`, `downloads_info`.`download_date`) AS `lifeTime`, `downloads_info`.`download_date` AS `downloadDate`, `files`.`name`
+					FROM `files` LEFT JOIN `downloads_info` ON `downloads_info`.`file_id` = `files`.`id` WHERE `downloads_info`.`added_file_cookie` = :added_file_cookie;";
+		$params = ['added_file_cookie' => $addedFileCookie];
+		return $this->dataBase->select($query, $params);
 	}
 }

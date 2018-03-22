@@ -7,7 +7,6 @@ use App\ValueObject\UserValueObject;
 use Engine\DataBase;
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Views\Twig;
 
 class FileAction extends AbstractAction {
 
@@ -121,6 +120,7 @@ class FileAction extends AbstractAction {
 				'countFiles' => $countUploadedFiles
 			];
 		}
+
 		$fileValueObject = $fileModel->selectInfoForDownloadingFileByName($fileName, $dataBase);
 
 		if (empty($fileValueObject)) {
@@ -167,7 +167,7 @@ class FileAction extends AbstractAction {
 			'pathTo'		=> 'pathTo',
 		]);
 
-		$fileParams['sizeKb'] = (int) ($fileParams['sizeKb'] / 10024);
+		$fileParams['sizeKb'] = round($fileParams['sizeKb'] / 10024, 2);
 
 		return $response->write($twig->render('GetFileContent.html', ['file' => $fileParams, 'user' => $userParams]));
 	}
@@ -196,6 +196,35 @@ class FileAction extends AbstractAction {
 			->withHeader('Expires', '0')
 			->withHeader('Content-Transfer-Encoding', 'binary')
 			->withRedirect("/file/$fileName");
+	}
+
+	/**
+	 * @param string $userHashId
+	 * @param Request $request
+	 * @param Response $response
+	 * @param DataBase $dataBase
+	 * @param \Twig_Environment $twig
+	 * @return mixed
+	 */
+	public function viewPageUsersFilesToUserAction(string $userHashId, Request $request, Response $response, DataBase $dataBase, \Twig_Environment $twig) {
+		$userHashId = str_replace('_','/', $userHashId);
+		$fileModel = $this->getFileModel();
+		$userModel = $this->getUserModel();
+
+		if ($userHashId === 'anonymously') {
+			$files = $fileModel->getAllUsersFilesByAddedCookie($request, $dataBase);
+			$user = $userModel->getIdNameCountFilesByEnterCookie($request, $dataBase);
+		} else {
+			$userId = $userModel->getUserIdByUserIdHash($userHashId, $dataBase);
+			$files = $fileModel->getAllUsersFilesByUserId($userId, $dataBase);
+			$user['countFiles'] = $fileModel->getCountUploadedFilesForLogoutUser($request, $dataBase);
+		}
+
+		if (empty($files)) {
+			return $response->withRedirect('/');
+		}
+
+		return $response->write($twig->render('UsersFiles.html', ['user' => $user,'files' => $files]));
 	}
 
 }

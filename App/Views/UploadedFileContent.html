@@ -9,7 +9,11 @@
                     <div class="avatar-block center-block">
                         <a href="/" class="circle-profile-link for-tag-a">
                             <div class="circle-block for-link-profile-A">
-                                A
+                                {% if user.name is defined %}
+                                    {{user.name|first}}
+                                {% else %}
+                                    A
+                                {% endif %}
                             </div>
                         </a>
                     </div>
@@ -24,7 +28,7 @@
                     </h5>
                     <ul class="panel-menu">
                         <li>
-                            <a href="#" class="text-inherit">
+                            <a href="/users-files/{% if user.hashUserId is defined %}{{user.hashUserId}}{% else %}anonymously{% endif %}" class="text-inherit">
                                 {% if user.countFiles is defined %}
                                     My files
                                     <h5 class="m-y-0"> {{user.countFiles}} </h5>
@@ -113,7 +117,7 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <a href="#" class="btn btn-default file-edit-cancel">
+                                    <a href="/" class="btn btn-default file-edit-cancel">
                                         <i class="fa fa-ban"></i>
                                         Отмена
                                     </a>

@@ -17,4 +17,12 @@ class UserTdg extends AbstractTableDataGateway {
 		return $this->dataBase->select($query, $params, false);
 	}
 
+	/**
+	 * @return array
+	 */
+	public function selectActiveUsersId(): array {
+		$query = "SELECT `users`.`id` FROM `users` WHERE `users`.`is_delete` = 0;";
+		return $this->dataBase->select($query);
+	}
+
 }

@@ -1,5 +1,45 @@
 {% include 'Header.html' %}
 
-    Your profile!!!
+<div class="mainUploadedFileContent">
+    <div class="page-file-show row">
+        <div class="col-sm-5 col-md-4 col-lg-3">
+            <div class="panel panel-default panel-profile">
+                <div class="panel-heading panel-profile-hseading"></div>
+                <div class="panel-body text-center">
+                    <div class="avatar-block center-block">
+                        <a href="/" class="circle-profile-link for-tag-a">
+                            <div class="circle-block for-link-profile-A">
+                                {% if user.name is defined %}
+                                {{user.name|first}}
+                                {% else %}
+                                A
+                                {% endif %}
+                            </div>
+                        </a>
+                    </div>
+                    <h5 class="panel-title panel-profile-nickname m-t-15 m-b-15">
+                        <a href="/" class="color-for-nickname" title="{% if user.name is defined %} {{user.name}} {% else %} Anonymously {% endif %}">
+                            {% if user.name is defined %}
+                            {{user.name}}
+                            {% else %}
+                            Anonymously
+                            {% endif %}
+                        </a>
+                    </h5>
+                    <ul class="panel-menu">
+                        <li>
+                            <a href="/users-files/{% if user.hashUserId is defined %}{{user.hashUserId}}{% else %}anonymously{% endif %}" class="text-inherit">
+                                {% if user.countFiles is defined %}
+                                My files
+                                <h5 class="m-y-0"> {{user.countFiles}} </h5>
+                                {% endif %}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% include 'Footer.html' %}
