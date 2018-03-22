@@ -91,8 +91,14 @@ $app->get('/file/{name}', function ($request, $response, $args) use ($app) {
 		);
 });
 
-$app->post('/get-file/{name}', function () use ($app) {
-
+$app->get('/get-file/{name}', function ($request, $response, $args) use ($app) {
+	return $app->getContainer()->get('File.Controller')
+		->downloadFileToUserAction(
+			$args['name'],
+			$response,
+			$app->getContainer()->get('DataBase'),
+			$app->getContainer()->get('twig')
+		);
 });
 
 $app->post('/update-file', function () use ($app) {

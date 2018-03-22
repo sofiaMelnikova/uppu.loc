@@ -142,7 +142,7 @@ class FileModel extends AbstractModel {
 		$fileValueObject = $this->getFileValueObject();
 		$fileValueObject->setOriginalName($uploadedFile->getClientFilename());
 		$fileValueObject->setOriginalExtension($uploadedFile->getClientMediaType());
-		$fileValueObject->setPathTo("Assets/UsersFiles/Image/$newFileName"); // todo: take path from config
+		$fileValueObject->setPathTo("/Assets/UsersFiles/Image/$newFileName"); // todo: take path from config
 		$fileValueObject->setName($newFileName);
 		$fileValueObject->setSize($uploadedFile->getSize());
 		$fileValueObject->setType('image'); // todo: take type from property

@@ -114,10 +114,10 @@
                         </ul>
                     </div>
                     <div class="file-info-btns-block m-b-10 m-t-15">
-                        <button formmethod="post" href="/get-file/{{file.name}}" class="btn btn-primary btn-download m-t-10 m-b-5" id="download-btn" rel="nofollow" title="Скачать {{ file.originalName }}">
+                        <a href="/get-file/{{file.name}}" rel="noopener" download="{{ file.originalName }}" class="btn btn-primary btn-download m-t-10 m-b-5" id="download-btn" rel="nofollow" title="Скачать {{ file.originalName }}">
                             <i class="fa fa-download"></i>
                             Скачать
-                        </button>
+                        </a>
                     </div>
                 </li>
 

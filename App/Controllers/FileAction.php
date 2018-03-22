@@ -157,6 +157,7 @@ class FileAction extends AbstractAction {
 		}
 
 		$fileValueObject = $fileModel->selectInfoForDownloadingFileByName($fileName, $dataBase);
+		$fileValueObject->setName($fileName);
 
 		$fileParams = $fileValueObject->getParamsAsArray([
 			'originalName'	=> 'originalName',
