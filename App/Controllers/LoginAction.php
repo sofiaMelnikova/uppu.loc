@@ -35,7 +35,8 @@ class LoginAction extends AbstractAction {
 
 			return $response->withHeader('Set-Cookie', $toHeadersCookie)->withRedirect('/profile');
 		}
-		
-		return $response->write($twig->render('LoginContent.html', ['errors' => $errors, 'values' => $postParams]));
+
+		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
+		return $response->write($twig->render('LoginContent.html', ['navBar' => $navBar, 'errors' => $errors, 'values' => $postParams]));
 	}
 }

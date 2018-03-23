@@ -29,12 +29,35 @@
             <li class="nav-item active">
                 <a class="nav-link my-text-color" href="#">Обзор <span class="sr-only">(current)</span></a>
             </li>
+
+            {% if navBar.hashUserId is defined %}
+                <li class="nav-item active">
+                    <a class="nav-link my-text-color" href="/users-files/{{navBar.hashUserId}}">Файлы <span class="sr-only">(current)</span></a>
+                </li>
+            {% endif %}
+
         </ul>
         <!--<form class="form-inline my-2 my-lg-0">-->
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary my-button" data-toggle="modal" data-target="#registration">
-            Зарегестрироваться
-        </button>
+
+        {% if navBar.userLogout %}
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary my-button" data-toggle="modal" data-target="#registration">
+                Зарегестрироваться
+            </button>
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary my-button" data-toggle="modal" data-target="#login">
+                Войти
+            </button>
+        {% endif %}
+
+        {% if navBar.userLogin %}
+            <a href="/profile">
+                <button formmethod="get" type="button" class="btn btn-primary my-button">
+                    Профиль
+                </button>
+            </a>
+        {% endif %}
 
         <!-- Modal -->
         <div class="modal fade" id="registration" tabindex="-1" role="dialog" aria-labelledby="registrationLabel" aria-hidden="true">
@@ -88,11 +111,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary my-button" data-toggle="modal" data-target="#login">
-            Войти
-        </button>
 
         <!-- Modal -->
         <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">

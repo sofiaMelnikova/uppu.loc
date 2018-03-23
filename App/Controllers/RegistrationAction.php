@@ -2,11 +2,7 @@
 
 namespace App\Controllers;
 
-use App\Models\LoginModel;
-use App\Models\RegistrationModel;
 use Engine\DataBase;
-use Engine\Helper;
-use Engine\Validator;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -23,16 +19,17 @@ class RegistrationAction extends AbstractAction {
 		$validator = $this->getValidator();
 		$postParams = $request->getParsedBody();
 		$errors = $validator->registrationForm($postParams);
+		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
 
 		if (!empty($errors)) {
-			return $response->write($twig->render('RegistrationContent.html', ['errors' => $errors, 'values' => $postParams]));
+			return $response->write($twig->render('RegistrationContent.html', ['navBar' => $navBar, 'errors' => $errors, 'values' => $postParams]));
 		}
 
 		$registrationModel = $this->getRegistrationModel();
 		$existEmail = $registrationModel->isSetActiveEmail($postParams['email'], $dataBase);
 
 		if ($existEmail) {
-			return $response->write($twig->render('RegistrationContent.html', ['errors' => ['email' => 'User already exist with this e-mail'], 'values' => $postParams]));
+			return $response->write($twig->render('RegistrationContent.html', ['navBar' => $navBar, 'errors' => ['email' => 'User already exist with this e-mail'], 'values' => $postParams]));
 		}
 
 		$loginModel = $this->getLoginModel();

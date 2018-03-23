@@ -19,6 +19,9 @@ require_once __DIR__ . '/vendor/autoload.php';
 $container = require_once __DIR__ . "/Configs/ConstructContainApp.php";
 $app = new \Slim\App($container);
 
+use Slim\Http\Request;
+use Slim\Http\Response;
+
 //$app->post('/login', function () use ($app) {
 //	var_dump($app->getContainer()->get('request')->getmethod);
 //	var_dump($app->getContainer()->get('request')->getParsedBody()); // $_POST
@@ -40,12 +43,14 @@ $app->post('/registration', function () use ($app) {
 		$app->getContainer()->get('twig'));
 });
 
-$app->get('/registration', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('RegistrationContent.html'));
+$app->get('/registration', function (Request $request, Response $response) use ($app) {
+	$navBarParams = $app->getContainer()->get('NavBar.Model')->getParams($request, $app->getContainer()->get('DataBase'));
+	return $response->getBody()->write($app->getContainer()->get('twig')->render('RegistrationContent.html', ['navBar' => $navBarParams]));
 });
 
-$app->get('/login', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('LoginContent.html'));
+$app->get('/login', function (Request $request, Response $response) use ($app) {
+	$navBarParams = $app->getContainer()->get('NavBar.Model')->getParams($request, $app->getContainer()->get('DataBase'));
+	return $response->getBody()->write($app->getContainer()->get('twig')->render('LoginContent.html', ['navBar' => $navBarParams]));
 });
 
 $app->get('/profile', function () use ($app) {
@@ -56,8 +61,9 @@ $app->get('/profile', function () use ($app) {
 			$app->getContainer()->get('twig'));
 });
 
-$app->get('/', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('MainContent.html'));
+$app->get('/', function (Request $request, Response $response) use ($app) {
+	$navBarParams = $app->getContainer()->get('NavBar.Model')->getParams($request, $app->getContainer()->get('DataBase'));
+	return $response->getBody()->write($app->getContainer()->get('twig')->render('MainContent.html', ['navBar' => $navBarParams]));
 });
 
 $app->post('/download', function () use ($app) {
@@ -69,8 +75,9 @@ $app->post('/download', function () use ($app) {
 	);
 });
 
-$app->get('/uploaded-file', function () use ($app) {
-	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('UploadedFileContent.html'));
+$app->get('/uploaded-file', function (Request $request, Response $response) use ($app) {
+	$navBarParams = $app->getContainer()->get('NavBar.Model')->getParams($request, $app->getContainer()->get('DataBase'));
+	return $response->getBody()->write($app->getContainer()->get('twig')->render('UploadedFileContent.html', ['navBar' => $navBarParams]));
 });
 
 $app->get('/edit-file/{name}', function ($request, $response, $args) use ($app) {
@@ -133,21 +140,23 @@ $app->get('/users-files/{userHashId}', function ($request, $response, $args) use
 //			]));
 //})->prepare();
 
-$app->get('/test/{a}', function ($request, $response, $args) use ($app) {
-	var_dump($args['a']);
-	die();
+$mw = function ($request, $response, Slim\Route $next) {
+	$next->setArgument('key', 'value');
+
+//	$response->getBody()->write('BEFORE');
+//	$response = $next($request, $response);
+//	$response->getBody()->write('AFTER');
+
+	return $next;
+};
+
+$app->get('/test', function (Request $request, Response $response, array $args) use ($app) {
+
+
 //	$response->write($app->getContainer()->get('twig')->render('UsersFiles.html'));
-
-//	if (empty($args['test'])) { // использовать вместо этого что-то подобное before/after
-//		var_dump(123);
-//		die();
-//	}
-//	var_dump($args['test']);
-//	die();
-
 //	var_dump(phpinfo());
 //	die();
 //	return $app->getContainer()->get('response')->getBody()->write($app->getContainer()->get('twig')->render('testContent.html'));
-});
+})->getArgument('key', 'dfg');
 
 $app->run();

@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\FileModel;
+use App\Models\NavBarModel;
 use App\Models\UserModel;
 use Engine\Helper;
 use Engine\Validator;
@@ -10,6 +11,13 @@ use App\Models\RegistrationModel;
 use App\Models\LoginModel;
 
 abstract class AbstractAction {
+
+	/**
+	 * @return NavBarModel
+	 */
+	protected function getNavBarModel(): NavBarModel {
+		return new NavBarModel();
+	}
 
 	/**
 	 * @return LoginModel

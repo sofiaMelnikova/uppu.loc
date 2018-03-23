@@ -21,7 +21,8 @@ class UserAction extends AbstractAction {
 		}
 
 		$user = $this->getUserModel()->getIdNameCountFilesByEnterCookie($request, $dataBase);
-		return $response->write($twig->render('ProfileContent.html', ['user' => $user]));
+		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
+		return $response->write($twig->render('ProfileContent.html', ['navBar' => $navBar, 'user' => $user]));
 	}
 
 }

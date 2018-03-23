@@ -19,11 +19,20 @@ return [
 	'User.Controller' => function () {
 		return new \App\Controllers\UserAction();
 	},
+	'NavBar.Model' => function () {
+		return new \App\Models\NavBarModel();
+	},
 	'Login.Model' => function () {
 		return new \App\Models\LoginModel();
 	},
 	'Registration.Model' => function () {
 		return new \App\Models\RegistrationModel();
+	},
+	'File.Model' => function () {
+		return new \App\Models\FileModel();
+	},
+	'User.Model' => function () {
+		return new \App\Models\UserModel();
 	},
 	'DataBase' => function () use ($dbConf) {
 		return new \Engine\DataBase($dbConf['dbName'], $dbConf['userName'], $dbConf['password'], $dbConf['host'], $dbConf['port']);

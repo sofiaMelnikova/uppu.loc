@@ -49,14 +49,16 @@ class FileAction extends AbstractAction {
 			$fileModel->uploadedForLoginUser($newFileName, $uploadedFile['uploadedFile'], $request, $dataBase) :
 			$fileModel->uploadedForLogoutUser($newFileName, $uploadedFile['uploadedFile'], $request, $dataBase);
 
+		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
+
 		return empty($result['toHeadersCookie']) ?
 			$response
 //				->withRedirect("/uploaded-file", 302)
-					->write($twig->render('UploadedFileContent.html', ['user' => $result['user'], 'file' => $result['file']])) :
+					->write($twig->render('UploadedFileContent.html', ['navBar' => $navBar, 'user' => $result['user'], 'file' => $result['file']])) :
 			$response
 //				->withRedirect("/uploaded-file", 302)
 				->withHeader('Set-Cookie', $result['toHeadersCookie'])
-					->write($twig->render('UploadedFileContent.html', ['user' => $result['user'], 'file' => $result['file']]));
+					->write($twig->render('UploadedFileContent.html', ['navBar' => $navBar, 'user' => $result['user'], 'file' => $result['file']]));
 	}
 
 	/**
@@ -91,13 +93,15 @@ class FileAction extends AbstractAction {
 			'id'			=> 'idFile',
 		]);
 
+		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
+
 		if (!empty($errors)) {
-			return $response->write($twig->render('UploadedFileContent.html', ['errors' => ['description' => $errors], 'file' => $fileParams, 'user' => $userParams]));
+			return $response->write($twig->render('UploadedFileContent.html', ['navBar' => $navBar, 'errors' => ['description' => $errors], 'file' => $fileParams, 'user' => $userParams]));
 		}
 
 		$fileModel->updateUploadedFile($fileValueObject, $dataBase);
 
-		return $response->write($twig->render('UploadedFileContent.html', ['file' => $fileParams, 'user' => $userParams]));
+		return $response->write($twig->render('UploadedFileContent.html', ['navBar' => $navBar, 'file' => $fileParams, 'user' => $userParams]));
 	}
 
 	/**
@@ -128,15 +132,19 @@ class FileAction extends AbstractAction {
 		}
 
 		$fileValueObject->setLink("http://uppu.loc/file/$fileName");
+		$fileValueObject->setName($fileName);
 
 		$file = $fileValueObject->getParamsAsArray([
 			'id'			=> 'fileId',
 			'originalName'	=> 'name',
 			'description'	=> 'description',
 			'lifespanDays'	=> 'lifespanDays',
-			'link'			=> 'link']);
+			'link'			=> 'link',
+			'name'			=> 'savedName'
+		]);
 
-		return $response->write($twig->render('UploadedFileContent.html', ['file' => $file, 'user' => $user]));
+		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
+		return $response->write($twig->render('UploadedFileContent.html', ['navBar' => $navBar, 'file' => $file, 'user' => $user]));
 	}
 
 	/**
@@ -169,7 +177,8 @@ class FileAction extends AbstractAction {
 
 		$fileParams['sizeKb'] = round($fileParams['sizeKb'] / 10024, 2);
 
-		return $response->write($twig->render('GetFileContent.html', ['file' => $fileParams, 'user' => $userParams]));
+		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
+		return $response->write($twig->render('GetFileContent.html', ['navBar' => $navBar, 'file' => $fileParams, 'user' => $userParams]));
 	}
 
 	/**
@@ -223,7 +232,8 @@ class FileAction extends AbstractAction {
 			return $response->withRedirect('/');
 		}
 
-		return $response->write($twig->render('UsersFiles.html', ['user' => $user,'files' => $files]));
+		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
+		return $response->write($twig->render('UsersFiles.html', ['navBar' => $navBar, 'user' => $user,'files' => $files]));
 	}
 
 }

@@ -89,14 +89,15 @@ class FileModel extends AbstractModel {
 		$result = [
 			'user' =>
 				[
-					'name' => '',
-					'countFiles' => $countDownloadedFile,
+					'name'			=> '',
+					'countFiles'	=> $countDownloadedFile,
 				],
 			'file' =>
 				[
-					'link' => "http://uppu.loc/file/$newFileName",
-					'name' => $fileValueObject->getOriginalName(),
-					'idFile' => $idFile,
+					'link'		=> "http://uppu.loc/file/$newFileName",
+					'name'		=> $fileValueObject->getOriginalName(),
+					'idFile'	=> $idFile,
+					'savedName'	=> $fileValueObject->getName()
 				],
 			'toHeadersCookie' => $toHeadersCookie ?? ''
 		];
@@ -123,9 +124,10 @@ class FileModel extends AbstractModel {
 		$result = [
 			'user' => $user,
 			'file' => [
-				'link' => "http://uppu.loc/file/$newFileName",
-				'name' => $fileValueObject->getOriginalName(),
-				'idFile' => $fileId,
+				'link'		=> "http://uppu.loc/file/$newFileName",
+				'name'		=> $fileValueObject->getOriginalName(),
+				'idFile'	=> $fileId,
+				'savedName'	=> $fileValueObject->getName(),
 			],
 		];
 
@@ -155,7 +157,7 @@ class FileModel extends AbstractModel {
 	 * @param DataBase $dataBase
 	 * @return int
 	 */
-	public function getCountUploadedFilesForLogoutUser(Request $request, DataBase $dataBase) { //
+	public function getCountUploadedFilesForLogoutUser(Request $request, DataBase $dataBase) {
 		$addedFileCookie = $request->getCookieParam('added_file');
 		return $addedFileCookie ? $this->getCountFilesByAddedFileCookie($addedFileCookie, $dataBase) : 0;
 	}

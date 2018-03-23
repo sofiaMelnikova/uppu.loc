@@ -117,7 +117,7 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <a href="/" class="btn btn-default file-edit-cancel">
+                                    <a href="{% if file.savedName is empty %}/{% else %}/file/{{file.savedName}}{% endif %}" class="btn btn-default file-edit-cancel">
                                         <i class="fa fa-ban"></i>
                                         Отмена
                                     </a>
