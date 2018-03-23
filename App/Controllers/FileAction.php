@@ -207,7 +207,6 @@ class FileAction extends AbstractAction {
 	 * @return mixed
 	 */
 	public function viewPageUsersFilesToUserAction(string $userHashId, Request $request, Response $response, DataBase $dataBase, \Twig_Environment $twig) {
-		$userHashId = str_replace('_','/', $userHashId);
 		$fileModel = $this->getFileModel();
 		$userModel = $this->getUserModel();
 

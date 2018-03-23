@@ -116,7 +116,7 @@ $app->post('/update-file', function () use ($app) {
 
 $app->get('/users-files/{userHashId}', function ($request, $response, $args) use ($app) {
 	return $app->getContainer()->get('File.Controller')->viewPageUsersFilesToUserAction(
-		$args['userHashId'],
+		str_replace('_','/', $args['userHashId']),
 		$request,
 		$response,
 		$app->getContainer()->get('DataBase'),
