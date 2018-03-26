@@ -228,12 +228,39 @@ class FileAction extends AbstractAction {
 			$user = $userModel->getIdNameCountFilesByEnterCookie($request, $dataBase);
 		}
 
+		if (empty($user['id']) && isset($userId) || isset($userId) && $user['id'] != $userId) {
+			$user = $userModel->getNameCountUploadedFilesById($userId, $dataBase);
+		}
+
 		if (empty($files)) {
 			return $response->withRedirect('/');
 		}
 
 		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
-		return $response->write($twig->render('UsersFiles.html', ['navBar' => $navBar, 'user' => $user,'files' => $files]));
+		return $response->write($twig->render('UsersFiles.html', ['navBar' => $navBar, 'user' => $user, 'files' => $files]));
+	}
+
+	/**
+	 * @param Request $request
+	 * @param Response $response
+	 * @param DataBase $dataBase
+	 * @param \Twig_Environment $twig
+	 * @return mixed
+	 */
+	public function viewAllUsersFiles(Request $request, Response $response, DataBase $dataBase, \Twig_Environment $twig) {
+		$fileModel = $this->getFileModel();
+		$userModel = $this->getUserModel();
+
+		if ($this->getLoginModel()->isLoginUser($request, $dataBase)) {
+			$actualUserParams = $userModel->getIdNameCountFilesByEnterCookie($request, $dataBase);
+		} else {
+			$actualUserParams['countFiles'] = $fileModel->getCountUploadedFilesForLogoutUser($request, $dataBase);
+		}
+
+		$filesParams = $fileModel->getAllFilesInfoWithUserHashIdsAndUsersNames($dataBase);
+
+		$navBar = $this->getNavBarModel()->getParams($request, $dataBase);
+		return $response->write($twig->render('AllFilesContent.html', ['navBar' => $navBar, 'user' => $actualUserParams,'files' => $filesParams]));
 	}
 
 }

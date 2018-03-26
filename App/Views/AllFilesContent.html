@@ -30,8 +30,8 @@
                         <li>
                             <a href="/users-files/{% if user.hashUserId is defined %}{{user.hashUserId}}{% else %}anonymously{% endif %}" class="text-inherit">
                                 {% if user.countFiles is defined %}
-                                    User uploaded
-                                    <h5 class="m-y-0"> {{user.countFiles}} files </h5>
+                                    My files
+                                    <h5 class="m-y-0"> {{user.countFiles}} </h5>
                                 {% endif %}
                             </a>
                         </li>
@@ -60,18 +60,18 @@
                                                 <div class="media-left file-list-avatar">
                                                     <div class="user-icon user-icon-for-comment flat-icon little-icon-background-color">
                                                         <b>
-                                                            {% if user.name is defined %}
-                                                                {{user.name|first}}
+                                                            {% if file.userName is defined %}
+                                                                {{file.userName|first}}
                                                             {% else %}
                                                                 A
                                                             {% endif %}
                                                         </b>
                                                     </div>
                                                 </div>
-                                                <div class="file-list-user-name" title="{{user.name}}">
+                                                <div class="file-list-user-name" title="{{file.userName}}">
                                                     <b>
-                                                        {% if user.name is defined %}
-                                                            {{user.name}}
+                                                        {% if file.userName is defined %}
+                                                            {{file.userName}}
                                                         {% else %}
                                                             Anonymously
                                                         {% endif %}
@@ -80,13 +80,13 @@
                                             </div>
                                             <div class="file-show-title">
                                                 <p class="lead">
-                                                    <span>
-                                                        {% if file.originalName is empty %}
-                                                            __EnterOriginalFileName__
-                                                        {% else %}
-                                                            {{ file.originalName }}
-                                                        {% endif %}
-                                                    </span>
+                                                        <span>
+                                                            {% if file.originalName is empty %}
+                                                                __EnterOriginalFileName__
+                                                            {% else %}
+                                                                {{ file.originalName }}
+                                                            {% endif %}
+                                                        </span>
                                                 </p>
                                             </div>
                                             <section>
@@ -106,18 +106,18 @@
                                                                     <div class="media-body">
                                                                         <div class="file-info-filename-lg visible-md visible-lg">
                                                                             <div class="filename" title="{{file.originalName}}">
-                                                                                 <span title="">
-                                                                                     <span>
-                                                                                         <b>
-                                                                                             {% if file.originalName is empty %}
+                                                                                <span title="">
+                                                                                    <span>
+                                                                                        <b>
+                                                                                            {% if file.originalName is empty %}
                                                                                                 __EnterOriginalFileName__
-                                                                                             {% else %}
+                                                                                            {% else %}
                                                                                                 {{ file.originalName }}
-                                                                                             {% endif %}
-                                                                                         </b>
-                                                                                     </span>
-                                                                                     <i class="nowrap">({{ file.sizeKb }} КБ)</i>
-                                                                                 </span>
+                                                                                            {% endif %}
+                                                                                        </b>
+                                                                                    </span>
+                                                                                    <i class="nowrap">({{ file.sizeKb }} КБ)</i>
+                                                                                </span>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -159,11 +159,11 @@
                     <li class="file-list-fileitem list-group-item">
                         <div class="media" data-toggle="modal" data-target="#getFile{{file.name}}">
                             <div class="media-left file-list-avatar">
-                                <a href="/users-files/{% if user.hashUserId is defined %}{{user.hashUserId}}{% else %}anonymously{% endif %}">
+                                <a href="{% if file.hashUserId == 'anonymously' %}#{% else %}/users-files/{{file.hashUserId}}{% endif %}">
                                     <div class="user-icon user-icon-for-comment flat-icon" style="background-color: #b1fcc7">
                                         <b>
-                                            {% if user.name is defined %}
-                                                {{user.name|first}}
+                                            {% if file.userName is defined %}
+                                                {{file.userName|first}}
                                             {% else %}
                                                 A
                                             {% endif %}
@@ -173,10 +173,10 @@
                                 </a>
                             </div>
                             <div class="file-list-user-name" title="{{user.name}}">
-                                <a href="/users-files/{% if user.hashUserId is defined %}{{user.hashUserId}}{% else %}anonymously{% endif %}" class="color-black">
+                                <a href="{% if file.hashUserId == 'anonymously' %}#{% else %}/users-files/{{file.hashUserId}}{% endif %}" class="color-black">
                                     <b>
-                                        {% if user.name is defined %}
-                                            {{user.name}}
+                                        {% if file.userName is defined %}
+                                            {{file.userName}}
                                         {% else %}
                                             Anonymously
                                         {% endif %}
@@ -184,13 +184,13 @@
                                 </a>
                             </div>
                             <div class="file-list-title" title="{{file.originalName}}">
-                                <span class="title-text-in-list">
-                                    {% if file.originalName is empty %}
-                                        __FileOriginalName__
-                                    {% else %}
-                                        {{file.originalName}}
-                                    {% endif %}
-                                </span>
+                                    <span class="title-text-in-list">
+                                        {% if file.originalName is empty %}
+                                            __FileOriginalName__
+                                        {% else %}
+                                            {{file.originalName}}
+                                        {% endif %}
+                                    </span>
                             </div>
                             <div class="fileset-list-info">
                                 <div class="file-show-info m-b-25">
@@ -204,18 +204,18 @@
                                                         </div>
                                                         <div class="file-info-filename-lg visible-md visible-lg">
                                                             <div class="filename" title="{{file.originalName}}">
-                                                            <span title="">
-                                                                <span>
-                                                                    <b>
-                                                                        {% if file.originalName is empty %}
-                                                                            __EnterOriginalFileName__
-                                                                        {% else %}
-                                                                            {{ file.originalName }}
-                                                                        {% endif %}
-                                                                    </b>
+                                                                <span title="">
+                                                                    <span>
+                                                                        <b>
+                                                                            {% if file.originalName is empty %}
+                                                                                __EnterOriginalFileName__
+                                                                            {% else %}
+                                                                                {{ file.originalName }}
+                                                                            {% endif %}
+                                                                        </b>
+                                                                    </span>
+                                                                    <i class="nowrap">({{ file.sizeKb }} КБ)</i>
                                                                 </span>
-                                                                <i class="nowrap">({{ file.sizeKb }} КБ)</i>
-                                                            </span>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -91,7 +91,7 @@ $app->get('/edit-file/{name}', function ($request, $response, $args) use ($app) 
 		);
 });
 
-$app->get('/file/{name}', function ($request, $response, $args) use ($app) {
+$app->get('/file/{name}', function (Request $request, Response $response, array $args) use ($app) {
 	return $app->getContainer()->get('File.Controller')
 		->viewPageDownloadingFileToUserAction(
 			$args['name'],
@@ -102,7 +102,7 @@ $app->get('/file/{name}', function ($request, $response, $args) use ($app) {
 		);
 });
 
-$app->get('/get-file/{name}', function ($request, $response, $args) use ($app) {
+$app->get('/get-file/{name}', function (Request $request, Response $response, array $args) use ($app) {
 	return $app->getContainer()->get('File.Controller')
 		->downloadFileToUserAction(
 			$args['name'],
@@ -121,9 +121,18 @@ $app->post('/update-file', function () use ($app) {
 	);
 });
 
-$app->get('/users-files/{userHashId}', function ($request, $response, $args) use ($app) {
+$app->get('/users-files/{userHashId}', function (Request $request, Response $response, array $args) use ($app) {
 	return $app->getContainer()->get('File.Controller')->viewPageUsersFilesToUserAction(
-		str_replace('_','/', $args['userHashId']),
+		str_replace('__to_slash__','/', $args['userHashId']),
+		$request,
+		$response,
+		$app->getContainer()->get('DataBase'),
+		$app->getContainer()->get('twig')
+	);
+});
+
+$app->get('/files', function (Request $request, Response $response) use ($app) {
+	return $app->getContainer()->get('File.Controller')->viewAllUsersFiles(
 		$request,
 		$response,
 		$app->getContainer()->get('DataBase'),

@@ -25,7 +25,7 @@ class UserModel extends AbstractModel {
 			'id'		=> $sqlResponse['id'],
 			'name'		=> $sqlResponse['name'],
 			'countFiles'	=> $sqlResponse['COUNT(*)'],
-			'hashUserId' => str_replace('/', '_', password_hash($sqlResponse['id'], PASSWORD_BCRYPT))
+			'hashUserId' => $this->getHashUserIdByUserId((int) $sqlResponse['id'])
 		];
 	}
 
@@ -47,6 +47,29 @@ class UserModel extends AbstractModel {
 		}
 
 		return $actualUserId;
+	}
+
+	/**
+	 * @param int $id
+	 * @return string
+	 */
+	public function getHashUserIdByUserId(int $id): string {
+		return str_replace('/', '__to_slash__', password_hash($id, PASSWORD_BCRYPT));
+	}
+
+	/**
+	 * @param int $userId
+	 * @param DataBase $dataBase
+	 * @return array
+	 */
+	public function getNameCountUploadedFilesById(int $userId, DataBase $dataBase): array {
+		$sqlResponse = $this->getUserTdg($dataBase)->selectNameCountUploadedFilesById($userId);
+		return [
+			'id'		=> $userId,
+			'name'		=> $sqlResponse['name'],
+			'countFiles'	=> $sqlResponse['COUNT(*)'],
+			'hashUserId' => $this->getHashUserIdByUserId((int) $sqlResponse['id'])
+		];
 	}
 
 }

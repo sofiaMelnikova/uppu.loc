@@ -196,4 +196,16 @@ class FileTdg extends AbstractTableDataGateway {
 		$params = ['added_file_cookie' => $addedFileCookie];
 		return $this->dataBase->select($query, $params);
 	}
+
+	/**
+	 * @return array
+	 */
+	public function selectInfoForDownloadingAndShowingForAllFiles(): array {
+		$query = "SELECT `files`.`id`, `files`.`path_to` AS `pathTo`, `files`.`original_name` AS `originalName`, 
+					`files`.`original_extension` AS `originalExtension`, `files`.`description`,`files`.`size` AS `sizeKb`, 
+					`downloads_info`.`user_id` AS `userId`,	DATEDIFF(`files`.`expire_time`, `downloads_info`.`download_date`) AS `lifeTime`, 
+					`downloads_info`.`download_date` AS `downloadDate`, `files`.`name`, `users`.name AS `userName`
+					FROM `files` LEFT JOIN `downloads_info` ON `downloads_info`.`file_id` = `files`.`id` LEFT JOIN `users` ON `downloads_info`.`user_id` = `users`.`id` WHERE `downloads_info`.`is_delete` = 0;";
+		return $this->dataBase->select($query);
+	}
 }

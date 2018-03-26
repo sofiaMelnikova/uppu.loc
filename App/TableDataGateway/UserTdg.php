@@ -25,4 +25,17 @@ class UserTdg extends AbstractTableDataGateway {
 		return $this->dataBase->select($query);
 	}
 
+	/**
+	 * @param int $userId
+	 * @return array|bool
+	 */
+	public function selectNameCountUploadedFilesById(int $userId) {
+		$query = "SELECT `users`.`id`, `users`.`name`, COUNT(*) FROM `users` 
+					RIGHT JOIN `downloads_info` ON `users`.`id`=`downloads_info`.`user_id` 
+					WHERE `users`.`id` = :users_id GROUP BY `users`.`id`;";
+		$params = [':users_id' => $userId];
+		return $this->dataBase->select($query, $params, false);
+	}
+
+
 }

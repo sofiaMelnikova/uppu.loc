@@ -19,6 +19,13 @@ class FileModel extends AbstractModel {
 	}
 
 	/**
+	 * @return UserModel
+	 */
+	private function getUserModel(): UserModel {
+		return new UserModel();
+	}
+
+	/**
 	 * @param string $value
 	 * @return string[]
 	 */
@@ -117,7 +124,7 @@ class FileModel extends AbstractModel {
 
 		$typeId = $this->getTypeIdForFile($fileValueObject->getType(), $dataBase); // TODO: изменить передачу типа, врменно сохраняем только картинки
 
-		$user = (new UserModel())->getIdNameCountFilesByEnterCookie($request, $dataBase);
+		$user = $this->getUserModel()->getIdNameCountFilesByEnterCookie($request, $dataBase);
 
 		$fileId = (int) $this->getFileTdg($dataBase)->addNewFileByLoginUser($fileValueObject, $typeId, $user['id'], date('Y-m-d H:i:s'));
 
@@ -282,6 +289,40 @@ class FileModel extends AbstractModel {
 			$files[$key]['sizeKb'] = round($file['sizeKb'] / 10024, 2);
 		}
 
+		return $files;
+	}
+
+	/**
+	 * @param array $files
+	 * @return array
+	 */
+	private function changeUserParamsForAllFile(array $files): array {
+		if (empty($files)) {
+			return [];
+		}
+
+		$userModel = $this->getUserModel();
+
+		foreach ($files as $key => $file) {
+			if (empty($file['userId'])) {
+				$files[$key]['hashUserId'] = 'anonymously';
+				$files[$key]['userName'] = 'Anonymously';
+			} else {
+				$files[$key]['hashUserId'] = $userModel->getHashUserIdByUserId($file['userId']);
+			}
+		}
+
+		return $files;
+	}
+
+	/**
+	 * @param DataBase $dataBase
+	 * @return array
+	 */
+	public function getAllFilesInfoWithUserHashIdsAndUsersNames(DataBase $dataBase): array {
+		$responseSql = $this->getFileTdg($dataBase)->selectInfoForDownloadingAndShowingForAllFiles();
+		$files = $this->getSizeFilesFromByteToKb($responseSql);
+		$files = $this->changeUserParamsForAllFile($files);
 		return $files;
 	}
 
